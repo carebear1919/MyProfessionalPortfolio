@@ -1,0 +1,8 @@
+# Place your project webp images here.
+# For each project, you can name them like:
+# - internal-reporting-dashboard-1.webp
+# - internal-reporting-dashboard-2.webp
+# - s-core-portal-1.webp
+# etc.
+#
+# They can then be referenced as `/projects/internal-reporting-dashboard-1.webp` in the data.
