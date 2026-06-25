@@ -4,7 +4,15 @@ interface FooterProps {
 
 export default function Footer({ scrollToSection }: FooterProps) {
   return (
-    <footer className="py-16 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+    <footer className="relative py-16 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+      {/* Vertical margin rules */}
+      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
       <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Alignment style: Left panel + Right panel */}
@@ -28,31 +36,31 @@ export default function Footer({ scrollToSection }: FooterProps) {
             <div className="flex flex-col md:items-end gap-2.5 font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
               <button
                 onClick={() => scrollToSection('home')}
-                className="hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
+                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
               >
                 01 // HOME
               </button>
               <button
                 onClick={() => scrollToSection('projects')}
-                className="hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
+                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
               >
                 02 // SHIPPED SYSTEMS
               </button>
               <button
                 onClick={() => scrollToSection('about')}
-                className="hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
+                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
               >
                 03 // ABOUT MECHANICS
               </button>
               <button
                 onClick={() => scrollToSection('services')}
-                className="hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
+                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
               >
                 04 // SERVICE MATRIX
               </button>
               <button
                 onClick={() => scrollToSection('contact')}
-                className="hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
+                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
               >
                 05 // INITIALIZE CONNECTION
               </button>

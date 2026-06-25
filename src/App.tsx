@@ -134,6 +134,25 @@ export default function App() {
           {/* 2. Shipped Projects Section */}
           <Projects />
 
+          {/* 2.5 Trust Signals / Recognition Bar */}
+          <section className="py-16 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-wrap items-center justify-center lg:justify-between gap-x-10 gap-y-5">
+                {[
+                  { label: 'SM Investments Corporation', sub: 'Treasury Automation Intern' },
+                  { label: 'DOST Merit Scholar', sub: 'Department of Science & Technology' },
+                  { label: 'Executive of the Month', sub: 'CSO — DLSU-D' },
+                  { label: 'Best Executive Committee', sub: 'Council of Student Organizations' },
+                ].map((item) => (
+                  <div key={item.label} className="text-center lg:text-left">
+                    <span className="block font-serif font-bold text-sm sm:text-base text-editorial-charcoal dark:text-editorial-cream tracking-tight">{item.label}</span>
+                    <span className="block font-mono text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mt-0.5">{item.sub}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* 3. Consolidated About/Core Architecture Section */}
           <About onOpenResume={() => setIsResumeOpen(true)} />
 

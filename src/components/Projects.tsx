@@ -17,13 +17,18 @@ export default function Projects() {
 
   const categories = ['All', 'Web Development', 'UI/UX', 'Branding & Visuals'];
 
+  // Pulse animation trigger for filter cross-nav feedback
+  const [pulseFilter, setPulseFilter] = useState<string | null>(null);
+
   // Listen to custom filtering event from Services
   useEffect(() => {
     const handleFilterEvent = (e: Event) => {
       const customEvent = e as CustomEvent<string>;
       if (customEvent.detail && categories.includes(customEvent.detail)) {
         setSelectedCategory(customEvent.detail);
-        setSpotlightIndex(0); // reset index
+        setPulseFilter(customEvent.detail);
+        setTimeout(() => setPulseFilter(null), 2000);
+        setSpotlightIndex(0);
       }
     };
 
@@ -31,18 +36,26 @@ export default function Projects() {
     return () => window.removeEventListener('filterProjects', handleFilterEvent);
   }, []);
 
-  // Filter projects dynamically
+  // Filter projects dynamically — featured first
   const filteredProjects = useMemo(() => {
-    if (selectedCategory === 'All') return projects;
-    return projects.filter((p) => p.category === selectedCategory);
+    const list = selectedCategory === 'All' ? projects : projects.filter((p) => p.category === selectedCategory);
+    return [...list].sort((a, b) => (a.featured === b.featured ? 0 : a.featured ? -1 : 1));
   }, [selectedCategory]);
 
-  // Handle index safety when filter changes
+  // Start at first featured project
+  const initialFeaturedIndex = useMemo(() =>
+    filteredProjects.findIndex((p) => p.featured),
+  [filteredProjects]);
+
+  // Handle index safety when filter changes — prefer featured
   useEffect(() => {
-    if (spotlightIndex >= filteredProjects.length) {
-      setSpotlightIndex(0);
+    if (filteredProjects.length > 0) {
+      const safeIdx = initialFeaturedIndex >= 0 ? initialFeaturedIndex : 0;
+      if (spotlightIndex >= filteredProjects.length || (spotlightIndex === 0 && safeIdx > 0)) {
+        setSpotlightIndex(safeIdx);
+      }
     }
-  }, [filteredProjects, spotlightIndex]);
+  }, [filteredProjects]);
 
   // Current project highlighted in Spotlight
   const spotlightProject = filteredProjects[spotlightIndex] || null;
@@ -136,7 +149,15 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+    <section id="projects" className="relative py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+      {/* Vertical margin rules */}
+      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
       <div className="max-w-7xl mx-auto">
         
         {/* Category Filters Heading */}
@@ -158,15 +179,15 @@ export default function Projects() {
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setSpotlightIndex(0);
-                }}
-                className={`px-4 py-2 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer focus:outline-none ${
-                  selectedCategory === cat
-                    ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-sm'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream hover:bg-neutral-50 dark:hover:bg-neutral-950'
-                }`}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setSpotlightIndex(0);
+                        }}
+                        className={`min-touch-wide px-5 py-2 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer focus:outline-none ${
+                          selectedCategory === cat
+                            ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-sm'
+                            : 'text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream hover:bg-neutral-50 dark:hover:bg-neutral-950'
+                        } ${pulseFilter === cat ? 'animate-pulse ring-2 ring-indigo-500/50' : ''}`}
               >
                 {cat}
               </button>
@@ -190,7 +211,7 @@ export default function Projects() {
             <button
               onClick={handlePrev}
               disabled={filteredProjects.length <= 1}
-              className="p-2 border border-neutral-200 dark:border-neutral-800 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer focus:outline-none"
+              className="min-touch border border-neutral-200 dark:border-neutral-800 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer focus:outline-none"
               aria-label="Previous project"
             >
               <ArrowLeft size={13} />
@@ -198,7 +219,7 @@ export default function Projects() {
             <button
               onClick={handleNext}
               disabled={filteredProjects.length <= 1}
-              className="p-2 border border-neutral-200 dark:border-neutral-800 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer focus:outline-none"
+              className="min-touch border border-neutral-200 dark:border-neutral-800 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer focus:outline-none"
               aria-label="Next project"
             >
               <ArrowRight size={13} />
@@ -416,7 +437,12 @@ export default function Projects() {
                     return (
                       <div
                         key={project.id}
-                        onClick={() => setSpotlightIndex(idx)}
+                        onClick={() => {
+                          setSpotlightIndex(idx);
+                          setActiveProject(project);
+                          setDrawerViewMode(project.images && project.images.length > 0 ? 'screenshots' : 'blueprint');
+                          setDrawerImageIndex(0);
+                        }}
                         className={`p-6 border rounded-sm text-left transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[140px] ${
                           isSpotlighted
                             ? 'border-editorial-charcoal dark:border-editorial-cream bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-md'
@@ -428,15 +454,26 @@ export default function Projects() {
                           {formattedIndex}
                         </div>
 
-                        <div className="flex justify-between items-start z-10">
-                          <div>
-                            <span className={`text-[10.5px] font-mono uppercase tracking-widest font-bold ${isSpotlighted ? 'text-neutral-300 dark:text-neutral-700' : 'text-neutral-500 dark:text-neutral-400'}`}>
-                              {project.category}
-                            </span>
-                            <h4 className="text-base font-serif italic font-bold mt-1 tracking-tight">
-                              {project.title}
-                            </h4>
-                          </div>
+                          <div className="flex justify-between items-start z-10">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className={`text-[10.5px] font-mono uppercase tracking-widest font-bold ${isSpotlighted ? 'text-neutral-300 dark:text-neutral-700' : 'text-neutral-500 dark:text-neutral-400'}`}>
+                                  {project.category}
+                                </span>
+                                {project.featured && (
+                                  <span className={`font-mono text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${
+                                    isSpotlighted
+                                      ? 'border-yellow-400/60 text-yellow-300 bg-yellow-500/10'
+                                      : 'border-yellow-500/30 text-yellow-600 dark:text-yellow-400 bg-yellow-500/5'
+                                  }`}>
+                                    ★ Featured
+                                  </span>
+                                )}
+                              </div>
+                              <h4 className="text-base font-serif italic font-bold mt-1 tracking-tight">
+                                {project.title}
+                              </h4>
+                            </div>
                           
                           <span className={`font-mono text-[10.5px] px-1.5 py-0.5 rounded border font-bold ${
                             isSpotlighted 
@@ -506,7 +543,7 @@ export default function Projects() {
                     </span>
                     <button
                       onClick={() => setActiveProject(null)}
-                      className="font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-sm px-4 py-2 cursor-pointer focus:outline-none transition-colors duration-200"
+                      className="min-touch font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-sm px-5 py-2 cursor-pointer focus:outline-none transition-colors duration-200"
                     >
                       CLOSE (ESC)
                     </button>
@@ -678,7 +715,7 @@ export default function Projects() {
                       href={activeProject.links.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-3 px-6 rounded-sm bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal hover:bg-neutral-800 dark:hover:bg-neutral-200 font-mono text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all duration-300 shadow-sm cursor-pointer"
+                      className="min-touch-wide flex-1 px-6 rounded-sm bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal hover:bg-neutral-800 dark:hover:bg-neutral-200 font-mono text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all duration-300 shadow-sm cursor-pointer"
                     >
                       Launch Live Project <ExternalLink size={13} />
                     </a>
@@ -688,7 +725,7 @@ export default function Projects() {
                       href={activeProject.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="py-3 px-6 rounded-sm border border-neutral-300 dark:border-neutral-700 hover:border-editorial-charcoal dark:hover:border-editorial-cream text-editorial-charcoal dark:text-editorial-cream font-mono text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
+                      className="min-touch-wide px-6 rounded-sm border border-neutral-300 dark:border-neutral-700 hover:border-editorial-charcoal dark:hover:border-editorial-cream text-editorial-charcoal dark:text-editorial-cream font-mono text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
                     >
                       Repository <Github size={13} />
                     </a>

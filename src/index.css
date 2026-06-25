@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@200;300;400;500;600&display=swap');
+
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@200;300;400;500;600&display=swap');
 
 @theme {
   --font-serif: "Cormorant Garamond", Georgia, serif;
@@ -55,6 +55,38 @@ html, body {
   overflow-x: hidden;
   scroll-behavior: smooth;
   transition: background-color 0.5s ease, color 0.5s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Responsive media — prevent overflow on all viewports */
+img, video, canvas, svg, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure interactive elements meet 44px minimum touch target on mobile
+   while preserving the editorial aesthetic */
+.min-touch {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.min-touch-wide {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Scrollbar styling matching the typography */

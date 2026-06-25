@@ -72,18 +72,44 @@ export default function Contact() {
 
     setIsSubmitting(true);
     setSubmitError(false);
-    
-    // Simulate pipeline request dispatch
-    setTimeout(() => {
-      // Small simulated chance of failure for error testing block, otherwise succeeds
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1200);
+
+    const payload = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      subject: formData.subject.trim(),
+      message: formData.message.trim(),
+    };
+
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.errors?.[0] || data.error || 'Request failed');
+        }
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+        setSubmitError(true);
+      });
   };
 
   return (
     <section id="contact" className="relative py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left overflow-hidden">
+      {/* Vertical margin rules */}
+      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
       
       {/* BACKGROUND WATERMARK */}
       <div className="absolute right-0 bottom-0 select-none pointer-events-none z-0 opacity-[0.03] dark:opacity-[0.02] translate-y-12 translate-x-12">
@@ -195,7 +221,7 @@ export default function Contact() {
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         placeholder="Jane Doe"
-                        className={`w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 py-3 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 ${
+                        className={`min-touch-wide w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 ${
                           fieldErrors.name
                             ? 'border-red-500 dark:border-red-500 focus:border-red-500'
                             : 'border-neutral-200 dark:border-neutral-800 focus:border-editorial-charcoal dark:focus:border-editorial-cream'
@@ -221,7 +247,7 @@ export default function Contact() {
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         placeholder="jane@example.com"
-                        className={`w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 py-3 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 ${
+                        className={`min-touch-wide w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 ${
                           fieldErrors.email
                             ? 'border-red-500 dark:border-red-500 focus:border-red-500'
                             : 'border-neutral-200 dark:border-neutral-800 focus:border-editorial-charcoal dark:focus:border-editorial-cream'
@@ -246,7 +272,7 @@ export default function Contact() {
                         value={formData.subject}
                         onChange={handleInputChange}
                         placeholder="Dashboard design collaboration"
-                        className="w-full bg-white dark:bg-neutral-950/40 border border-neutral-200 dark:border-neutral-800 rounded-sm px-4 py-3 text-xs sm:text-sm font-sans focus:outline-none focus:border-editorial-charcoal dark:focus:border-editorial-cream transition-colors duration-200"
+                        className="min-touch-wide w-full bg-white dark:bg-neutral-950/40 border border-neutral-200 dark:border-neutral-800 rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none focus:border-editorial-charcoal dark:focus:border-editorial-cream transition-colors duration-200"
                       />
                     </div>
 
@@ -263,7 +289,7 @@ export default function Contact() {
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         placeholder="Detail your pipeline specifications, workspace integration proposal, or system requirements..."
-                        className={`w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 py-3 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 resize-none ${
+                        className={`min-touch-wide w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 resize-none ${
                           fieldErrors.message
                             ? 'border-red-500 dark:border-red-500 focus:border-red-500'
                             : 'border-neutral-200 dark:border-neutral-800 focus:border-editorial-charcoal dark:focus:border-editorial-cream'
@@ -287,7 +313,7 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-3.5 px-6 rounded-sm bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal hover:bg-neutral-800 dark:hover:bg-neutral-200 font-mono text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer focus:outline-none disabled:opacity-40"
+                      className="min-touch-wide w-full px-6 rounded-sm bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal hover:bg-neutral-800 dark:hover:bg-neutral-200 font-mono text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer focus:outline-none disabled:opacity-40"
                     >
                       <span>{isSubmitting ? 'Dispatching...' : 'Send Message'}</span>
                       <Send size={12} className={isSubmitting ? 'animate-bounce' : ''} />
@@ -319,7 +345,7 @@ export default function Contact() {
 
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="inline-flex items-center gap-2 px-6 py-2.5 border border-neutral-200 dark:border-neutral-800 hover:border-editorial-charcoal dark:hover:border-editorial-cream rounded-sm font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream transition-colors duration-300 cursor-pointer focus:outline-none"
+                      className="min-touch-wide inline-flex items-center gap-2 px-6 border border-neutral-200 dark:border-neutral-800 hover:border-editorial-charcoal dark:hover:border-editorial-cream rounded-sm font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream transition-colors duration-300 cursor-pointer focus:outline-none"
                     >
                       Send Another Message
                     </button>

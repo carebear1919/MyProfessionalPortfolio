@@ -2,23 +2,6 @@ import { Project, SkillCategory, Experience, Service } from './types';
 
 export const projects: Project[] = [
   {
-    id: 'internal-reporting-dashboard',
-    title: 'Internal Reporting Dashboard',
-    subtitle: 'Apache Superset pricing dashboard for SM Investments',
-    category: 'Web Development',
-    description: 'Apache Superset dashboard for SM Investments — consolidates operational data, automates reporting workflows, and surfaces key metrics in real-time. Built with custom CSS grid architecture, RBAC, and automated data pipelines.',
-    longDescription: 'Consolidates operational data across business units, automates weekly reporting workflows, and surfaces key performance indicators in real-time. Built with custom CSS grid architecture, role-based access control (RBAC), and automated data pipelines forSM Investments Treasury Department.',
-    tags: ['Apache Superset', 'Custom CSS', 'Draw.io', 'Agile'],
-    links: {},
-    year: '2026',
-    role: 'Treasury Systems Automation Fellow',
-    featured: true,
-    mediaType: 'svg',
-    status: 'finished',
-    tagline: '@superset-sm',
-    images: ['/projects/internal-reporting-dashboard-1.webp', '/projects/internal-reporting-dashboard-2.webp']
-  },
-  {
     id: 's-core-portal',
     title: 'S-CORE Portal',
     subtitle: 'Request-and-approval portal for StratComm',
@@ -35,7 +18,24 @@ export const projects: Project[] = [
     mediaType: 'svg',
     status: 'finished',
     tagline: '@s-core',
-    images: ['/projects/s-core-portal-1.webp', '/projects/s-core-portal-2.webp']
+    images: ['/projects/s-core1.webp', '/projects/s-core2.webp', '/projects/s-core3.webp', '/projects/s-core4.webp', '/projects/s-core5.webp']
+  },
+  {
+    id: 'internal-reporting-dashboard',
+    title: 'Internal Reporting Dashboard',
+    subtitle: 'Apache Superset pricing dashboard for SM Investments',
+    category: 'Web Development',
+    description: 'Apache Superset dashboard for SM Investments — consolidates operational data, automates reporting workflows, and surfaces key metrics in real-time. Built with custom CSS grid architecture, RBAC, and automated data pipelines. Dashboard data is covered for confidentiality.',
+    longDescription: 'Consolidates operational data across business units, automates weekly reporting workflows, and surfaces key performance indicators in real-time. Built with custom CSS grid architecture, role-based access control (RBAC), and automated data pipelines for SM Investments Treasury Department.\n\nSensitive data in the screenshots has been covered to protect proprietary financial information.',
+    tags: ['Apache Superset', 'Custom CSS', 'Draw.io', 'Agile', 'Confidential'],
+    links: {},
+    year: '2026',
+    role: 'Treasury Systems Automation Fellow',
+    featured: true,
+    mediaType: 'image',
+    status: 'finished',
+    tagline: '@superset-sm',
+    images: ['/projects/internal-reporting-dashboard-1.webp', '/projects/internal-reporting-dashboard-2.webp']
   },
   {
     id: 's-core-prototype',
@@ -53,7 +53,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@s-core-proto'
+    tagline: '@s-core-proto',
+    images: ['/projects/s-core%20prototype1.webp', '/projects/s-core%20prototype2.webp', '/projects/s-core%20prototype3.webp']
   },
   {
     id: 'caresync',
@@ -72,7 +73,7 @@ export const projects: Project[] = [
     mediaType: 'svg',
     status: 'ongoing',
     tagline: '@caresync',
-    images: ['/projects/caresync-1.webp', '/projects/caresync-2.webp', '/projects/caresync-3.webp']
+    images: ['/projects/CareSync_Presentation_Jojica.webp', '/projects/CareSync_Presentation_Jojica (1).webp', '/projects/CareSync_Presentation_Jojica (2).webp', '/projects/CareSync_Presentation_Jojica (3).webp', '/projects/CareSync_Presentation_Jojica (4).webp', '/projects/CareSync_Presentation_Jojica (5).webp']
   },
   {
     id: 'cics-website',
@@ -90,7 +91,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@cics-web'
+    tagline: '@cics-web',
+    images: ['/projects/cicswebsite1.webp', '/projects/cicswebsite2.webp']
   },
   {
     id: 'beauty-corner',
@@ -108,7 +110,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@beauty-corner'
+    tagline: '@beauty-corner',
+    images: ['/projects/makeup1.webp', '/projects/makeup2.webp', '/projects/makeup3.webp']
   },
   {
     id: 'purrfect-care',
@@ -126,7 +129,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@purrfect-care'
+    tagline: '@purrfect-care',
+    images: ['/projects/purr1.webp', '/projects/purr2.webp', '/projects/purr3.webp']
   },
   {
     id: 'character-selector',
@@ -144,7 +148,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@characters'
+    tagline: '@characters',
+    images: ['/projects/Characters.webp']
   },
   {
     id: 'airline-booking',
@@ -162,7 +167,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@airline-booking'
+    tagline: '@airline-booking',
+    images: ['/projects/Airline Prototype1.webp', '/projects/Airline Prototype2.webp']
   },
   {
     id: 'cics-publications',
@@ -178,7 +184,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@cics-gov-pub'
+    tagline: '@cics-gov-pub',
+    images: ['/projects/cics1.webp', '/projects/cics2.webp', '/projects/cics3.webp', '/projects/cics4.webp', '/projects/cics5.webp', '/projects/cics6.webp', '/projects/cics7.webp', '/projects/cics8.webp', '/projects/cics9.webp', '/projects/cics10.webp', '/projects/cics11.webp']
   },
   {
     id: 'paws-publications',
@@ -194,7 +201,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@paws-advocacy'
+    tagline: '@paws-advocacy',
+    images: ['/projects/paws1.webp', '/projects/paws2.webp']
   },
   {
     id: 'dream-house',
@@ -212,7 +220,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@dreamhouse'
+    tagline: '@dreamhouse',
+    images: ['/projects/dreamhouse.webp']
   },
   {
     id: 'cso-publications',
@@ -228,7 +237,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@cso-council'
+    tagline: '@cso-council',
+    images: ['/projects/CSOPIC.webp', '/projects/cso1.webp', '/projects/cso2.webp', '/projects/cso3.webp', '/projects/cso4.webp', '/projects/cso5.webp', '/projects/cso6.webp', '/projects/Task_HILARIO,JIAN MARIE L..webp']
   },
   {
     id: 'creative-design-portfolio',
@@ -280,7 +290,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@hilario-creative'
+    tagline: '@hilario-creative',
+    images: ['/projects/thumbnail.webp']
   },
   {
     id: 'score-manual',
@@ -299,7 +310,7 @@ export const projects: Project[] = [
     mediaType: 'svg',
     status: 'finished',
     tagline: '@s-core-manual',
-    images: ['/projects/score-manual-1.webp', '/projects/score-manual-2.webp']
+    images: ['/projects/S-COREMANUAL1.webp', '/projects/S-COREMANUAL2.webp', '/projects/S-COREMANUAL3.webp', '/projects/S-COREMANUAL4.webp']
   },
   {
     id: 'score-poster',
@@ -315,7 +326,8 @@ export const projects: Project[] = [
     featured: false,
     mediaType: 'svg',
     status: 'finished',
-    tagline: '@s-core-poster'
+    tagline: '@s-core-poster',
+    images: ['/projects/S-CORE POSTER.webp']
   }
 ];
 

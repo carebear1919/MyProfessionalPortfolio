@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, Github, Linkedin, Instagram, Mail, FileText } from 'lucide-react';
+
 
 interface HeroProps {
   scrollToSection: (id: string) => void;
@@ -8,39 +6,29 @@ interface HeroProps {
 }
 
 export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const roles = [
-    'UI/UX Designer',
-    'React Web Architect',
-    'DOST Merit Scholar',
-    'Systems Automation Specialist'
-  ];
-
-  // Rotate roles sequentially with a fade transition
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % roles.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-between pt-8 pb-16 px-6 sm:px-10 lg:px-16 overflow-hidden bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
-      
-      {/* 1. BACKGROUND WATERMARK */}
+    <section className="relative min-h-screen flex flex-col justify-between pt-8 pb-14 px-6 sm:px-10 lg:px-16 overflow-hidden bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+
+      {/* Watermark */}
       <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none z-0 overflow-hidden">
-        <h2 className="text-[14vw] sm:text-[18vw] font-serif font-black italic text-neutral-200/70 dark:text-neutral-800/40 tracking-widest leading-none uppercase">
+        <span className="text-[16vw] sm:text-[20vw] font-serif font-black italic text-neutral-200/40 dark:text-neutral-800/20 tracking-[0.15em] leading-none uppercase">
           Portfolio
-        </h2>
+        </span>
       </div>
 
-      {/* Grid line overlays for editorial feel */}
-      <div className="absolute left-6 sm:left-10 lg:left-16 top-0 bottom-0 w-[1px] bg-neutral-100 dark:bg-neutral-900/80 pointer-events-none z-0" />
-      <div className="absolute right-6 sm:right-10 lg:right-16 top-0 bottom-0 w-[1px] bg-neutral-100 dark:bg-neutral-900/80 pointer-events-none z-0" />
+      {/* Vertical margin rules */}
+      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
 
-      {/* 2. TOP BAR */}
-      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-neutral-100 dark:border-neutral-900 pb-6 relative z-10 gap-4">
-        {/* Left Side Info */}
+      {/* TOP BAR */}
+      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 relative z-10 gap-2">
         <div className="font-mono text-[10.5px] sm:text-[11.5px] tracking-wider text-neutral-400 dark:text-neutral-500 space-y-0.5">
           <span className="block font-black text-editorial-charcoal dark:text-editorial-cream uppercase tracking-[0.2em]">
             Issue Vol. 04
@@ -49,123 +37,94 @@ export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
             Responsive Systems Portfolio
           </span>
         </div>
-
-        {/* Right Side Focus Cycling */}
-        <div className="flex items-center gap-2 font-mono text-[10px]">
-          <span className="text-neutral-400 dark:text-neutral-600 uppercase tracking-widest">
-            Focus //
-          </span>
-          <div className="h-5 overflow-hidden relative min-w-[170px] sm:min-w-[210px] text-left sm:text-right">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={roleIndex}
-                initial={{ y: 15, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -15, opacity: 0 }}
-                transition={{ duration: 0.35, ease: 'easeOut' }}
-                className="absolute left-0 sm:right-0 font-bold text-editorial-charcoal dark:text-editorial-cream uppercase tracking-wider block"
-              >
-                {roles[roleIndex]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-        </div>
+        <span className="font-mono text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
+          Design &amp; Development //
+        </span>
       </div>
 
-      {/* 3. HERO BODY - LARGE TYPOGRAPHY & INTERACTIVE ARTWORK PORTRAIT */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center flex-grow py-12 md:py-16 relative z-10">
-        
-        {/* Left Column Stacked Typography: UX UI WEB */}
-        <div className="lg:col-span-3 hidden md:flex flex-col justify-center space-y-2 pointer-events-none select-none">
-          {['UX', 'UI', 'WEB'].map((text, i) => (
-            <h2
-              key={i}
-              className="text-7xl lg:text-[85px] font-serif font-black tracking-tighter text-neutral-200 dark:text-neutral-800 uppercase leading-[0.85] select-none"
+      {/* HERO BODY */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center flex-grow py-6 md:py-10 relative z-10">
+
+        {/* Left Column — Discipline Tags (Desktop only) */}
+        <div className="lg:col-span-3 hidden lg:flex flex-col justify-center space-y-3 pointer-events-none select-none lg:border-r lg:border-neutral-300 dark:lg:border-neutral-700 lg:pr-8">
+          {(['Graphic Design', 'Front End Dev', 'UI/UX'] as const).map((text) => (
+            <span
+              key={text}
+              className="font-mono text-[11px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 border-l-2 border-neutral-300 dark:border-neutral-700 pl-3 leading-tight"
             >
               {text}
-            </h2>
+            </span>
           ))}
         </div>
 
-        {/* Center Column: Portrait Artwork & Floating Badges */}
+        {/* Center Column — Portrait */}
         <div className="lg:col-span-6 flex justify-center relative">
-          
-          {/* Portrait Framed Canvas */}
-          <div className="relative w-full max-w-[340px] aspect-[4/5] bg-neutral-100/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded p-6 shadow-sm flex flex-col justify-between overflow-hidden group">
-            
-            {/* Elegant Background SVG Diagram (Portrait representation) */}
-            <svg viewBox="0 0 300 380" className="absolute inset-0 w-full h-full p-4 opacity-25 dark:opacity-45 pointer-events-none stroke-current fill-none transition-transform duration-700 group-hover:scale-[1.03]">
-              <circle cx="150" cy="130" r="60" className="stroke-neutral-300 dark:stroke-neutral-800" strokeWidth="1" />
-              <path d="M150,190 C90,190 60,230 60,330 L240,330 C240,230 210,190 150,190 Z" className="stroke-neutral-300 dark:stroke-neutral-800" strokeWidth="1" />
-              <circle cx="150" cy="130" r="4" className="fill-editorial-charcoal dark:fill-editorial-cream stroke-none" />
-              {/* Radial measurement guidelines */}
-              <line x1="150" y1="20" x2="150" y2="360" className="stroke-neutral-200 dark:stroke-neutral-850" strokeWidth="0.5" strokeDasharray="3 3" />
-              <line x1="20" y1="130" x2="280" y2="130" className="stroke-neutral-200 dark:stroke-neutral-850" strokeWidth="0.5" strokeDasharray="3 3" />
-            </svg>
+          <div className="relative w-full max-w-[380px] aspect-[4/5] bg-neutral-100/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-sm shadow-sm overflow-hidden group">
 
-            {/* Top Right Floating Badge */}
-            <div className="absolute top-4 right-4 z-20">
-              <span className="inline-block font-mono text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-blue-500/10 to-violet-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 rounded-full px-2.5 py-0.5 shadow-sm select-none">
+            {/* Profile Photo */}
+            <img
+              src="/Profile.webp"
+              alt="Jian Marie Hilario"
+              width={380}
+              height={475}
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+
+            {/* Gradient overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/5 pointer-events-none z-10" />
+
+            {/* Bottom Left — DOST badge */}
+            <div className="absolute bottom-4 left-4 z-20">
+              <span className="inline-block font-mono text-[9px] font-black uppercase tracking-wider bg-editorial-charcoal/90 text-editorial-cream dark:bg-editorial-cream/90 dark:text-editorial-charcoal rounded-sm px-2.5 py-1 shadow-sm select-none backdrop-blur-sm">
                 DOST Merit Scholar
               </span>
             </div>
 
-            {/* Bottom Left Floating Badge */}
-            <div className="absolute bottom-4 left-4 z-20">
-              <span className="inline-block font-mono text-[10px] font-black uppercase tracking-wider bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal rounded-sm px-2.5 py-1 shadow-sm select-none">
-                IT Graduating // SM Alumna
-              </span>
-            </div>
-
-            {/* Internal layout lines */}
-            <div className="flex justify-between items-start font-mono text-[10px] text-neutral-400 dark:text-neutral-600 select-none">
-              <span>HILARIO.CORE.04</span>
-              <span className="invisible">LST // 2026</span>
-            </div>
-
-            {/* Minimalist layout outline */}
-            <div className="flex justify-between items-end font-mono text-[10px] text-neutral-400 dark:text-neutral-600 select-none">
-              <span className="invisible">CORE SYSTEM</span>
-              <span>100% RESPONSIVE</span>
-            </div>
-            
-            {/* Alt representation invisible block */}
-            <span className="sr-only">Jian Marie - Editorial System Portrait</span>
+            <span className="sr-only">Jian Marie Hilario — Profile Photo</span>
           </div>
-
         </div>
 
-        {/* Right Column Stacked Typography: JIAN MARIE DESI GNER */}
-        <div className="lg:col-span-3 text-left lg:text-right space-y-1.5 pointer-events-none select-none">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-black tracking-tighter text-editorial-charcoal dark:text-editorial-cream uppercase leading-[0.85] select-none">
-            JIAN MARIE
+        {/* Right Column — Name + Value Prop */}
+        <div className="lg:col-span-3 text-left lg:text-right space-y-0 pointer-events-none select-none lg:border-l lg:border-neutral-300 dark:lg:border-neutral-700 lg:pl-8">
+          <h2 className="text-[clamp(2.2rem,9vw,5rem)] font-serif font-black tracking-tight text-editorial-charcoal dark:text-editorial-cream uppercase leading-[0.75]">
+            JIAN
           </h2>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-light italic text-editorial-charcoal/80 dark:text-editorial-cream/80 uppercase leading-[0.85] select-none">
-            DESI
+          <h2 className="text-[clamp(1.8rem,7vw,4rem)] font-serif font-light italic tracking-[0.18em] text-editorial-charcoal/50 dark:text-editorial-cream/50 uppercase leading-[0.8] -mt-[0.1em]">
+            MARIE
           </h2>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-black tracking-tighter text-editorial-charcoal dark:text-editorial-cream uppercase leading-[0.85] select-none">
-            GNER
+          <span className="flex items-center gap-2 my-4 lg:ml-auto lg:justify-end">
+            <span className="w-20 sm:w-28 h-[1px] bg-neutral-300 dark:bg-neutral-700 inline-block" />
+            <span className="w-2 h-2 rotate-45 border border-neutral-300 dark:border-neutral-700 inline-block flex-shrink-0" />
+          </span>
+          <h2 className="text-[clamp(1.1rem,4vw,2.2rem)] font-serif font-semibold text-editorial-charcoal/70 dark:text-editorial-cream/70 uppercase leading-[0.9] tracking-[0.08em]">
+            DESIGNER
           </h2>
+          <p className="pt-4 text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-neutral-400 dark:text-neutral-500 pointer-events-auto select-auto leading-relaxed">
+            Graphic Design &bull; Front End Dev &bull; UI/UX
+          </p>
         </div>
 
       </div>
 
-      {/* 4. BOTTOM SECTION - ABSTRACT & ACTION MATRIX */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 border-t border-neutral-100 dark:border-neutral-900 relative z-10 items-end">
-        
-        {/* Abstract Column (1/2 width) */}
-        <div className="lg:col-span-6 space-y-4">
-          <span className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-400 dark:text-neutral-600 block font-bold">
-            // Editorial Abstract
+      {/* BOTTOM SECTION */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 pt-5 border-t border-neutral-100 dark:border-neutral-900 relative z-10 items-end">
+
+        {/* Abstract */}
+        <div className="lg:col-span-6 space-y-2">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400 dark:text-neutral-500 block font-bold">
+            Abstract //
           </span>
-          <p className="font-sans text-xs sm:text-[13px] leading-relaxed font-light text-neutral-500 dark:text-neutral-400 max-w-xl">
-            DOST Merit Scholar and full-stack systems developer. Specializing in financial pipeline automation, process re-engineering, and interactive React user experience suites.
+          <p className="font-sans text-xs sm:text-[12px] leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-xl">
+            DOST Merit Scholar crafting brand identities, front-end architectures, and human-centered interfaces.
           </p>
         </div>
 
-        {/* Buttons and Social Link Column */}
-        <div className="lg:col-span-6 space-y-6 flex flex-col items-start lg:items-end">
-          
+        {/* Actions */}
+        <div className="lg:col-span-6 flex flex-col items-start lg:items-end gap-3">
+
           {/* Action Row */}
           <div className="flex flex-wrap gap-2.5">
             <button
@@ -185,43 +144,36 @@ export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
                 onClick={onOpenResume}
                 className="px-5 py-3 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:border-indigo-400 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 font-mono text-[11px] font-bold tracking-widest uppercase text-editorial-charcoal dark:text-editorial-cream transition-all duration-300 flex items-center gap-1.5 cursor-pointer focus:outline-none"
               >
-                <FileText size={11} />
                 Resume
               </button>
             )}
           </div>
 
           {/* Social Row */}
-          <div className="flex items-center gap-5 pt-1">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              referrerPolicy="no-referrer"
-              className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300 flex items-center gap-1"
-            >
-              <Instagram size={10} /> Instagram
-            </a>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <a
               href="https://github.com/jianhilario"
               target="_blank"
-              referrerPolicy="no-referrer"
-              className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300 flex items-center gap-1"
+              rel="noopener noreferrer"
+              className="py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300"
             >
-              <Github size={10} /> GitHub
+              GitHub
             </a>
+            <span className="text-neutral-200 dark:text-neutral-800 select-none">/</span>
             <a
               href="https://linkedin.com"
               target="_blank"
-              referrerPolicy="no-referrer"
-              className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300 flex items-center gap-1"
+              rel="noopener noreferrer"
+              className="py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300"
             >
-              <Linkedin size={10} /> LinkedIn
+              LinkedIn
             </a>
+            <span className="text-neutral-200 dark:text-neutral-800 select-none">/</span>
             <a
               href="mailto:jianhilario@gmail.com"
-              className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300 flex items-center gap-1"
+              className="py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-300 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300"
             >
-              <Mail size={10} /> Email
+              Email
             </a>
           </div>
 

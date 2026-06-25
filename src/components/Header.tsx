@@ -130,7 +130,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                 </span>
                 <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 cursor-pointer focus:outline-none"
+                  className="min-touch rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 cursor-pointer focus:outline-none"
                   aria-label="Toggle theme"
                 >
                   <div className="w-4 h-4 flex items-center justify-center">
@@ -150,7 +150,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
-                    className="flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                     aria-label="GitHub profile"
                     title="GitHub"
                   >
@@ -161,7 +161,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
-                    className="flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                     aria-label="LinkedIn profile"
                     title="LinkedIn"
                   >
@@ -169,7 +169,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                   </a>
                   <a
                     href="mailto:jianhilario@gmail.com"
-                    className="flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                     aria-label="Email Address"
                     title="Email"
                   >
@@ -180,7 +180,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                     target="_blank"
                     rel="noopener noreferrer"
                     referrerPolicy="no-referrer"
-                    className="flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                     aria-label="Figma profile"
                     title="Figma"
                   >
@@ -194,7 +194,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
             <div className="flex flex-col items-center border-t border-neutral-200 dark:border-neutral-900 pt-6 w-full space-y-4">
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 cursor-pointer focus:outline-none"
+                className="min-touch rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 cursor-pointer focus:outline-none"
                 aria-label="Toggle theme"
                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
@@ -209,7 +209,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                   target="_blank"
                   rel="noopener noreferrer"
                   referrerPolicy="no-referrer"
-                  className="group relative flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300 w-9 h-9"
+                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                   aria-label="GitHub profile"
                 >
                   <Github size={13} />
@@ -222,30 +222,30 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                   target="_blank"
                   rel="noopener noreferrer"
                   referrerPolicy="no-referrer"
-                  className="group relative flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300 w-9 h-9"
-                  aria-label="LinkedIn profile"
-                >
-                  <Linkedin size={13} />
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                    LinkedIn
-                  </div>
-                </a>
-                <a
-                  href="mailto:jianhilario@gmail.com"
-                  className="group relative flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300 w-9 h-9"
-                  aria-label="Email Address"
-                >
-                  <Mail size={13} />
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                    Email
-                  </div>
-                </a>
-                <a
-                  href="https://www.figma.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  referrerPolicy="no-referrer"
-                  className="group relative flex items-center justify-center p-2 rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300 w-9 h-9"
+                    className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                    aria-label="LinkedIn profile"
+                  >
+                    <Linkedin size={13} />
+                    <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
+                      LinkedIn
+                    </div>
+                  </a>
+                  <a
+                    href="mailto:jianhilario@gmail.com"
+                    className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                    aria-label="Email Address"
+                  >
+                    <Mail size={13} />
+                    <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
+                      Email
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.figma.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    referrerPolicy="no-referrer"
+                    className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                   aria-label="Figma Profile"
                 >
                   <Figma size={13} />
@@ -292,7 +292,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
           {/* Mobile Palette Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream transition-all duration-300 cursor-pointer focus:outline-none"
+            className="min-touch rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream transition-all duration-300 cursor-pointer focus:outline-none"
             aria-label="Toggle theme"
           >
             <div className="w-3.5 h-3.5 flex items-center justify-center">
@@ -311,7 +311,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`px-3.5 py-1.5 rounded-full font-sans text-[10px] font-bold uppercase tracking-widest transition-all duration-300 focus:outline-none cursor-pointer ${
+                className={`min-touch px-4 py-2 rounded-full font-sans text-[10px] font-bold uppercase tracking-widest transition-all duration-300 focus:outline-none cursor-pointer ${
                   isActive
                     ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
                     : 'text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream'
@@ -324,19 +324,35 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
         </nav>
       </div>
 
-      {/* 4. BACK TO TOP FLOATING BUTTON */}
+      {/* 4. FLOATING ACTION BUTTONS */}
       <AnimatePresence>
         {showBackToTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-24 lg:bottom-10 right-6 lg:right-10 z-50 p-3 rounded-full bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-xl hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all duration-300 cursor-pointer focus:outline-none"
-            aria-label="Back to Top"
-          >
-            <ArrowUp size={16} />
-          </motion.button>
+          <>
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="min-touch fixed bottom-24 lg:bottom-10 right-6 lg:right-10 z-50 rounded-full bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-xl hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all duration-300 cursor-pointer focus:outline-none"
+              aria-label="Back to Top"
+            >
+              <ArrowUp size={16} />
+            </motion.button>
+
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => {
+                const el = document.getElementById('contact');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="min-touch-wide px-4 py-2.5 fixed bottom-36 lg:bottom-24 right-6 lg:right-10 z-50 rounded-full bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-xl hover:from-blue-500 hover:to-violet-500 transition-all duration-300 cursor-pointer focus:outline-none font-mono text-[10px] font-bold uppercase tracking-widest"
+              aria-label="Start a Project"
+            >
+              <span className="flex items-center gap-1.5"><Mail size={12} /> Start a Project</span>
+            </motion.button>
+          </>
         )}
       </AnimatePresence>
     </>

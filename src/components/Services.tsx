@@ -174,7 +174,15 @@ export default function Services() {
   const selectedService = services.find((s) => s.id === activeId) || services[0];
 
   return (
-    <section id="services" className="py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+    <section id="services" className="relative py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+      {/* Vertical margin rules */}
+      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
@@ -208,7 +216,7 @@ export default function Services() {
                   <button
                     key={service.id}
                     onClick={() => setActiveId(service.id)}
-                    className={`w-full flex-1 py-2.5 px-4 border rounded-sm text-left transition-all duration-300 cursor-pointer relative overflow-hidden flex items-center justify-between focus:outline-none ${
+                    className={`min-touch-wide w-full flex-1 px-5 border rounded-sm text-left transition-all duration-300 cursor-pointer relative overflow-hidden flex items-center justify-between focus:outline-none ${
                       isSelected
                         ? 'border-editorial-charcoal dark:border-editorial-cream bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-sm'
                         : 'border-neutral-200/80 dark:border-neutral-900 bg-white dark:bg-neutral-950/40 hover:border-neutral-400 dark:hover:border-neutral-700 text-neutral-600 dark:text-neutral-400'
@@ -312,7 +320,7 @@ export default function Services() {
                     <div className="mt-6">
                       <button
                         onClick={() => handleSeeRelatedWork(selectedService.id)}
-                        className="inline-flex items-center gap-1 font-sans text-xs font-bold uppercase tracking-tighter text-editorial-charcoal dark:text-editorial-cream border-b border-neutral-300 dark:border-neutral-700 hover:border-editorial-charcoal dark:hover:text-editorial-cream pb-1 transition-all duration-300 cursor-pointer focus:outline-none"
+                        className="min-touch-wide inline-flex items-center gap-1 font-sans text-xs font-bold uppercase tracking-tighter text-editorial-charcoal dark:text-editorial-cream border-b border-neutral-300 dark:border-neutral-700 hover:border-editorial-charcoal dark:hover:text-editorial-cream transition-all duration-300 cursor-pointer focus:outline-none"
                       >
                         See Related Work <ArrowUpRight size={13} />
                       </button>

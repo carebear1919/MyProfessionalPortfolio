@@ -91,7 +91,15 @@ export default function About({ onOpenResume }: AboutProps) {
   };
 
   return (
-    <section id="about" className="py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+    <section id="about" className="relative py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+      {/* Vertical margin rules */}
+      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
+      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
       <div className="max-w-7xl mx-auto">
         
         {/* Section Heading Row */}
@@ -146,7 +154,7 @@ export default function About({ onOpenResume }: AboutProps) {
             <div className="pt-6">
               <button
                 onClick={onOpenResume}
-                className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream border border-neutral-300 dark:border-neutral-700 px-5 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-950 transition-all cursor-pointer focus:outline-none"
+                className="min-touch-wide inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream border border-neutral-300 dark:border-neutral-700 px-5 hover:bg-neutral-50 dark:hover:bg-neutral-950 transition-all cursor-pointer focus:outline-none"
               >
                 <FileText size={14} /> Download Resume <Download size={12} />
               </button>
@@ -166,7 +174,7 @@ export default function About({ onOpenResume }: AboutProps) {
               {experienceTimeline.map((entry, idx) => (
                 <div key={entry.id} className="relative group">
                   {/* Decorative timeline bullet */}
-                  <div className="absolute -left-[31px] top-1.5 w-2 h-2 rounded-full border border-neutral-300 dark:border-neutral-700 bg-editorial-cream dark:bg-editorial-charcoal group-hover:bg-editorial-charcoal dark:group-hover:bg-editorial-cream group-hover:scale-110 transition-all duration-300" />
+                  <div className="absolute -left-[28px] top-1.5 w-2 h-2 rounded-full border border-neutral-300 dark:border-neutral-700 bg-editorial-cream dark:bg-editorial-charcoal group-hover:bg-editorial-charcoal dark:group-hover:bg-editorial-cream group-hover:scale-110 transition-all duration-300" />
                   
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-2">
                     <h4 className="font-serif font-bold text-base text-editorial-charcoal dark:text-editorial-cream leading-tight">
