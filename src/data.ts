@@ -313,6 +313,44 @@ export const projects: Project[] = [
     images: ['/projects/S-COREMANUAL1.webp', '/projects/S-COREMANUAL2.webp', '/projects/S-COREMANUAL3.webp', '/projects/S-COREMANUAL4.webp']
   },
   {
+    id: 'career-pipeline',
+    title: 'Career Pipeline',
+    subtitle: 'Gen Z minimalist job application tracker',
+    category: 'Web Development',
+    description: 'A Gen Z minimalist job application tracker with real-time analytics, follow-up reminders, and electric indigo accents. Full CRUD for applications, contact management, analytics dashboard with KPI cards, status donut, skill heatmap, weekly volume, and distribution charts.',
+    longDescription: 'A full-featured job application tracking system with 6 statuses (Applied → Interviewing → Technical → Offer → Rejected → Ghosted), recruiter contact management, resume/cover letter URL tracking, and a rich analytics dashboard featuring KPI cards, status donut chart, skill heatmap, weekly volume trends, and location/pay/source distribution charts.\n\nIncludes dark/light theme with custom accent colors, a command palette (Ctrl+K), multi-filter search, stale application tracking with follow-up reminders, desktop table view with mobile card view and pagination, a welcome onboarding modal with Q&A guide, settings panel with data reset and theme customization, and Excel/PDF export support.',
+    tags: ['React 19', 'TypeScript 5.8', 'Vite 6', 'Tailwind CSS 4', 'Recharts 3', 'Motion', 'Lucide React', 'date-fns', 'Express.js'],
+    links: {
+      live: 'https://job-application-tracker-by-jian.vercel.app'
+    },
+    year: '2026',
+    role: 'Full-Stack Developer',
+    featured: true,
+    mediaType: 'image',
+    status: 'finished',
+    tagline: '@career-pipeline',
+    images: ['/projects/JobTracker1.webp', '/projects/JobTracker2.webp', '/projects/JobTracker3.webp', '/projects/JobTracker4.webp', '/projects/JobTracker5.webp', '/projects/JobTracker6.webp', '/projects/JobTracker7.webp', '/projects/JobTracker8.webp']
+  },
+  {
+    id: 'retro-calc',
+    title: 'RetroCalc — Calorie Tracker',
+    subtitle: 'Windows 95/98-themed calorie & macro tracker',
+    category: 'Web Development',
+    description: 'A nostalgic Windows 95/98-themed calorie and macronutrient tracker. Features a daily dashboard with calorie/macro progress bars, a Chart.js donut chart, a food log journal with add/delete, a 7-day history (checklist + bar chart), and retro UI elements (taskbar, start menu, draggable/minimizable windows, 3D borders, pixel fonts). Runs entirely client-side with localStorage persistence.',
+    longDescription: 'A fully client-side calorie and macronutrient tracking application wrapped in a nostalgic Windows 95/98 interface. The daily dashboard displays calorie and macro progress bars alongside a Chart.js doughnut chart for visual breakdown. Users can log food entries with add/delete functionality, review a 7-day history with checklists and bar charts, and interact with retro UI elements including a taskbar, start menu, draggable/minimizable windows, 3D beveled borders, and pixel-perfect typography.\n\nBuilt with React 19, TypeScript, Vite 6, and TailwindCSS v4. Chart.js 4 powers the doughnut and bar charts with annotation plugins. Motion (framer-motion) drives window animations. An Express backend integrates Google Gemini AI for intelligent food suggestions. All data persists via browser localStorage.',
+    tags: ['React 19', 'TypeScript', 'Vite 6', 'Tailwind CSS 4', 'Chart.js 4', 'Motion', 'Express.js', 'Google Gemini AI'],
+    links: {
+      live: 'https://calorie-tracker-log.vercel.app'
+    },
+    year: '2026',
+    role: 'Full-Stack Developer',
+    featured: true,
+    mediaType: 'image',
+    status: 'finished',
+    tagline: '@retro-calc',
+    images: ['/projects/RetroCalc1.webp', '/projects/RetroCalc2.webp', '/projects/RetroCalc3.webp']
+  },
+  {
     id: 'score-poster',
     title: 'S-CORE Promotional Poster',
     subtitle: 'High-contrast campaign poster',
