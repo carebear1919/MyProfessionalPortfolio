@@ -222,30 +222,30 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
                   target="_blank"
                   rel="noopener noreferrer"
                   referrerPolicy="no-referrer"
-                    className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                    aria-label="LinkedIn profile"
-                  >
-                    <Linkedin size={13} />
-                    <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                      LinkedIn
-                    </div>
-                  </a>
-                  <a
-                    href="mailto:jianhilario@gmail.com"
-                    className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                    aria-label="Email Address"
-                  >
-                    <Mail size={13} />
-                    <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                      Email
-                    </div>
-                  </a>
-                  <a
-                    href="https://www.figma.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    referrerPolicy="no-referrer"
-                    className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                  aria-label="LinkedIn profile"
+                >
+                  <Linkedin size={13} />
+                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
+                    LinkedIn
+                  </div>
+                </a>
+                <a
+                  href="mailto:jianhilario@gmail.com"
+                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
+                  aria-label="Email Address"
+                >
+                  <Mail size={13} />
+                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
+                    Email
+                  </div>
+                </a>
+                <a
+                  href="https://www.figma.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  referrerPolicy="no-referrer"
+                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
                   aria-label="Figma Profile"
                 >
                   <Figma size={13} />
@@ -303,15 +303,16 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
       </header>
 
       {/* 3. MOBILE DOCK NAV (Floating bottom dock, hidden on desktop) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))] pt-3 pointer-events-none">
-        <nav className="flex items-center gap-2 px-4 py-3 rounded-full bg-editorial-cream/90 dark:bg-editorial-charcoal/90 border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg backdrop-blur-md pointer-events-auto transition-colors duration-500">
+      {/* FIX: use w-full + justify-around + flex-1 buttons so items never overflow screen edges */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center px-3 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))] pt-3 pointer-events-none">
+        <nav className="flex items-center justify-around w-full max-w-sm px-2 py-2.5 rounded-full bg-editorial-cream/90 dark:bg-editorial-charcoal/90 border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg backdrop-blur-md pointer-events-auto transition-colors duration-500 overflow-hidden">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`min-touch px-4 py-2 rounded-full font-sans text-[10px] font-bold uppercase tracking-widest transition-all duration-300 focus:outline-none cursor-pointer ${
+                className={`flex-1 min-w-0 px-1.5 py-2 rounded-full font-sans text-[9px] font-bold uppercase tracking-wider transition-all duration-300 focus:outline-none cursor-pointer text-center ${
                   isActive
                     ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
                     : 'text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream'
