@@ -124,7 +124,7 @@ export default function App() {
       />
 
       {/* Main Flow: Indented on desktop to fit the fixed Left Navbar side navigation */}
-      <div className={`transition-all duration-500 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`} id="main-content">
+      <div className={`transition-all duration-500 pb-28 lg:pb-0 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`} id="main-content">
         <main>
           {/* 1. Hero Banner Section */}
           <div id="home">

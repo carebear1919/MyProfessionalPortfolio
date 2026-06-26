@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ExternalLink, Github, ArrowUpRight, ArrowLeft, ArrowRight, Layers, Terminal, Cpu, CheckCircle } from 'lucide-react';
+import { ExternalLink, Github, ArrowUpRight, ArrowLeft, ArrowRight, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { Project } from '../types';
 import { projects } from '../data';
 
@@ -9,6 +9,15 @@ export default function Projects() {
   const [spotlightIndex, setSpotlightIndex] = useState<number>(0);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState<boolean>(false);
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number>(0);
+  const [lightboxScale, setLightboxScale] = useState<number>(1);
+  const [lightboxPosition, setLightboxPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const posStart = useRef({ x: 0, y: 0 });
+  const dragMoved = useRef(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const [viewMode, setViewMode] = useState<'blueprint' | 'screenshots'>('screenshots');
@@ -78,6 +87,43 @@ export default function Projects() {
     if (filteredProjects.length === 0) return;
     setSpotlightIndex((prev) => (prev === filteredProjects.length - 1 ? 0 : prev + 1));
   };
+
+  // Lightbox keyboard & scroll zoom effect
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+      if (e.key === 'ArrowLeft') {
+        setLightboxIndex(i => (i === 0 ? lightboxImages.length - 1 : i - 1));
+        setLightboxScale(1);
+        setLightboxPosition({ x: 0, y: 0 });
+      }
+      if (e.key === 'ArrowRight') {
+        setLightboxIndex(i => (i === lightboxImages.length - 1 ? 0 : i + 1));
+        setLightboxScale(1);
+        setLightboxPosition({ x: 0, y: 0 });
+      }
+    };
+    window.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    const img = imgRef.current;
+    if (img) {
+      const wheelHandler = (e: WheelEvent) => {
+        e.preventDefault();
+        setLightboxScale(s => Math.max(0.5, Math.min(5, s + (e.deltaY > 0 ? -0.3 : 0.3))));
+      };
+      img.addEventListener('wheel', wheelHandler, { passive: false });
+      return () => {
+        img.removeEventListener('wheel', wheelHandler);
+        window.removeEventListener('keydown', handler);
+        document.body.style.overflow = '';
+      };
+    }
+    return () => {
+      window.removeEventListener('keydown', handler);
+      document.body.style.overflow = '';
+    };
+  }, [isLightboxOpen, lightboxImages.length]);
 
   // Helper for generating abstract beautiful design blueprint nodes
   const renderBlueprintSVG = (projectId: string) => {
@@ -253,9 +299,17 @@ export default function Projects() {
                   {/* Media Canvas: Blueprint or Screenshot Gallery */}
                   <div
                     onClick={() => {
-                      setActiveProject(spotlightProject);
-                      setDrawerViewMode(spotlightProject.images && spotlightProject.images.length > 0 ? 'screenshots' : 'blueprint');
-                      setDrawerImageIndex(0);
+                      if (viewMode === 'screenshots' && spotlightProject.images && spotlightProject.images.length > 0) {
+                        setLightboxImages(spotlightProject.images);
+                        setLightboxIndex(activeImageIndex);
+                        setLightboxScale(1);
+                        setLightboxPosition({ x: 0, y: 0 });
+                        setIsLightboxOpen(true);
+                      } else {
+                        setActiveProject(spotlightProject);
+                        setDrawerViewMode('blueprint');
+                        setDrawerImageIndex(0);
+                      }
                     }}
                     className="relative aspect-[16/10] w-full border border-neutral-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center cursor-zoom-in group mb-8 overflow-hidden"
                   >
@@ -403,6 +457,16 @@ export default function Projects() {
                   </div>
 
                   <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => {
+                        setActiveProject(spotlightProject);
+                        setDrawerViewMode(spotlightProject.images && spotlightProject.images.length > 0 ? 'screenshots' : 'blueprint');
+                        setDrawerImageIndex(0);
+                      }}
+                      className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 border-b border-indigo-400/40 dark:border-indigo-600/40 pb-0.5 hover:opacity-80 transition-opacity cursor-pointer"
+                    >
+                      Full Breakdown <ArrowUpRight size={11} />
+                    </button>
                     {spotlightProject.links.live ? (
                       <a
                         href={spotlightProject.links.live}
@@ -439,9 +503,6 @@ export default function Projects() {
                         key={project.id}
                         onClick={() => {
                           setSpotlightIndex(idx);
-                          setActiveProject(project);
-                          setDrawerViewMode(project.images && project.images.length > 0 ? 'screenshots' : 'blueprint');
-                          setDrawerImageIndex(0);
                         }}
                         className={`p-6 border rounded-sm text-left transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[140px] ${
                           isSpotlighted
@@ -620,12 +681,19 @@ export default function Projects() {
 
                     <div className="relative aspect-[16/10] w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center overflow-hidden">
                       {drawerViewMode === 'screenshots' && activeProject.images && activeProject.images.length > 0 ? (
-                        <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img">
+                        <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img cursor-zoom-in">
                           <img
                             src={activeProject.images[drawerImageIndex]}
                             alt={`${activeProject.title} screenshot ${drawerImageIndex + 1}`}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-[1.03]"
                             referrerPolicy="no-referrer"
+                            onClick={() => {
+                              setLightboxImages(activeProject.images!);
+                              setLightboxIndex(drawerImageIndex);
+                              setLightboxScale(1);
+                              setLightboxPosition({ x: 0, y: 0 });
+                              setIsLightboxOpen(true);
+                            }}
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
                               const pNode = e.currentTarget.parentElement;
@@ -733,6 +801,154 @@ export default function Projects() {
                 </div>
               </motion.div>
             </div>
+          )}
+        </AnimatePresence>
+
+        {/* IMAGE LIGHTBOX */}
+        <AnimatePresence>
+          {isLightboxOpen && lightboxImages.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm select-none"
+              onClick={() => setIsLightboxOpen(false)}
+            >
+              <div
+                className="relative w-full h-full flex items-center justify-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Close */}
+                <button
+                  onClick={() => setIsLightboxOpen(false)}
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+
+                {/* Counter */}
+                {lightboxImages.length > 1 && (
+                  <span className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20 px-3 py-1 rounded-full bg-black/50 text-white font-mono text-xs font-bold">
+                    {lightboxIndex + 1} / {lightboxImages.length}
+                  </span>
+                )}
+
+                {/* Prev */}
+                {lightboxImages.length > 1 && (
+                  <button
+                    onClick={() => {
+                      setLightboxIndex(i => (i === 0 ? lightboxImages.length - 1 : i - 1));
+                      setLightboxScale(1);
+                      setLightboxPosition({ x: 0, y: 0 });
+                    }}
+                    className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors cursor-pointer"
+                    aria-label="Previous image"
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+                )}
+
+                {/* Next */}
+                {lightboxImages.length > 1 && (
+                  <button
+                    onClick={() => {
+                      setLightboxIndex(i => (i === lightboxImages.length - 1 ? 0 : i + 1));
+                      setLightboxScale(1);
+                      setLightboxPosition({ x: 0, y: 0 });
+                    }}
+                    className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors cursor-pointer"
+                    aria-label="Next image"
+                  >
+                    <ArrowRight size={20} />
+                  </button>
+                )}
+
+                {/* Zoom controls */}
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 text-white backdrop-blur-sm">
+                  <button
+                    onClick={() => setLightboxScale(s => Math.max(0.5, s - 0.5))}
+                    className="p-1 hover:text-neutral-300 cursor-pointer"
+                    aria-label="Zoom out"
+                  >
+                    <ZoomOut size={16} />
+                  </button>
+                  <span className="font-mono text-xs min-w-[44px] text-center font-bold select-none">
+                    {Math.round(lightboxScale * 100)}%
+                  </span>
+                  <button
+                    onClick={() => setLightboxScale(s => Math.min(5, s + 0.5))}
+                    className="p-1 hover:text-neutral-300 cursor-pointer"
+                    aria-label="Zoom in"
+                  >
+                    <ZoomIn size={16} />
+                  </button>
+                </div>
+
+                {/* Image */}
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="flex items-center justify-center w-full h-full p-4 sm:p-8 md:p-16"
+                  onPointerDown={(e) => {
+                    if (lightboxScale > 1) {
+                      setIsDragging(true);
+                      dragStart.current = { x: e.clientX, y: e.clientY };
+                      posStart.current = { ...lightboxPosition };
+                      dragMoved.current = false;
+                      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+                    }
+                  }}
+                  onPointerMove={(e) => {
+                    if (isDragging) {
+                      const dx = e.clientX - dragStart.current.x;
+                      const dy = e.clientY - dragStart.current.y;
+                      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+                        dragMoved.current = true;
+                      }
+                      setLightboxPosition({
+                        x: posStart.current.x + dx,
+                        y: posStart.current.y + dy,
+                      });
+                    }
+                  }}
+                  onPointerUp={() => {
+                    if (isDragging) {
+                      setIsDragging(false);
+                    }
+                  }}
+                  style={{
+                    cursor: lightboxScale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'pointer',
+                  }}
+                >
+                  <img
+                    ref={imgRef}
+                    src={lightboxImages[lightboxIndex]}
+                    alt={`Enlarged view ${lightboxIndex + 1}`}
+                    style={{
+                      transform: `scale(${lightboxScale}) translate(${lightboxPosition.x / lightboxScale}px, ${lightboxPosition.y / lightboxScale}px)`,
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'contain',
+                    }}
+                    className="select-none"
+                    draggable={false}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!dragMoved.current) {
+                        if (lightboxScale === 1) {
+                          setLightboxScale(2);
+                          setLightboxPosition({ x: 0, y: 0 });
+                        } else {
+                          setLightboxScale(1);
+                          setLightboxPosition({ x: 0, y: 0 });
+                        }
+                      }
+                    }}
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

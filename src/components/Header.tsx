@@ -303,7 +303,7 @@ export default function Header({ theme, toggleTheme, scrollToSection, activeSect
       </header>
 
       {/* 3. MOBILE DOCK NAV (Floating bottom dock, hidden on desktop) */}
-      <div className="lg:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))] pt-3 pointer-events-none">
         <nav className="flex items-center gap-2 px-4 py-3 rounded-full bg-editorial-cream/90 dark:bg-editorial-charcoal/90 border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg backdrop-blur-md pointer-events-auto transition-colors duration-500">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
