@@ -3,6 +3,7 @@
   "outputDirectory": "dist",
   "devCommand": "vite --port=3000",
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
