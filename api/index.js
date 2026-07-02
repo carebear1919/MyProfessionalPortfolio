@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { sendContactEmail, validateContactBody } from '../lib/email.js';
 
 export default async function handler(req, res) {
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
 
     res.json({ success: true, ...result });
   } catch (err) {
-    console.error('[CONTACT ERROR]', err);
-    res.status(500).json({ success: false, error: 'Failed to send message' });
+    console.error('[CONTACT ERROR]', err.message, err.stack);
+    res.status(500).json({ success: false, error: err.message || 'Failed to send message' });
   }
 }
