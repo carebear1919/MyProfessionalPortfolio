@@ -350,6 +350,25 @@ export const projects: Project[] = [
     status: 'finished',
     tagline: '@s-core-poster',
     images: ['/projects/S-CORE POSTER.webp']
+  },
+  {
+    id: 'sample-company',
+    title: 'Sample Company',
+    subtitle: 'ALTIORA brand Figma website design',
+    category: 'UI/UX',
+    description: 'A brand-focused Figma website design concept for ALTIORA — featuring clean layouts, product presentation, and modern UI components crafted for a premium brand identity.',
+    longDescription: 'A comprehensive Figma website design for ALTIORA, a premium brand. The design explores modern web layouts with an emphasis on visual hierarchy, brand storytelling, product showcases, and seamless navigation. Every screen was crafted to reflect a luxurious yet approachable brand voice — balancing high-impact visuals with clean, functional UI.\n\nThis is an ongoing iteration with continuous refinements in layout structure, component consistency, and interaction design.',
+    tags: ['Figma'],
+    links: {
+      live: 'https://www.figma.com/proto/aMXn2cK9TSL2AahvPsLBlN/ALTIORA?page-id=143%3A317&node-id=308-2236&viewport=-1802%2C-61%2C0.32&t=72EBSUKxijLE5Lco-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=308%3A2236&show-proto-sidebar=1'
+    },
+    year: '2026',
+    role: 'UI/UX Designer',
+    featured: false,
+    mediaType: 'image',
+    status: 'ongoing',
+    tagline: '@sample-company',
+    images: ['/projects/SampleCompany1.webp', '/projects/SampleCompany2.webp', '/projects/SampleCompany3.webp', '/projects/SampleCompany4.webp']
   }
 ];
 
