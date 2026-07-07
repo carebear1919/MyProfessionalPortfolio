@@ -1,4 +1,4 @@
-import { Project, SkillCategory, Experience, Service } from './types';
+﻿import { Project, SkillCategory, Experience, Service } from './types';
 
 export const projects: Project[] = [
   {
@@ -283,7 +283,7 @@ export const projects: Project[] = [
     longDescription: 'A beautiful visual catalog documenting brand concepts, modern vector layouts, typography assets, and custom illustrations compiled across creative projects.',
     tags: ['Photoshop', 'Canva', 'Figma', 'Illustrator'],
     links: {
-      live: '/projects/Jian Marie Hilario \u2014 Portfolio.pdf',
+      live: '/projects/Jian Marie Hilario - Portfolio.pdf',
       canva: 'https://canva.link/f6xn3atopprl6rq'
     },
     year: '2025',
@@ -292,7 +292,7 @@ export const projects: Project[] = [
     mediaType: 'svg',
     status: 'finished',
     tagline: '@hilario-creative',
-    pdfUrl: '/projects/Jian Marie Hilario \u2014 Portfolio.pdf'
+    pdfUrl: '/projects/Jian Marie Hilario - Portfolio.pdf'
   },
   {
     id: 'score-manual',

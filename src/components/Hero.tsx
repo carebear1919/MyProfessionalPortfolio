@@ -1,4 +1,4 @@
-
+﻿
 
 interface HeroProps {
   scrollToSection: (id: string) => void;
@@ -147,6 +147,14 @@ export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
                 Resume
               </button>
             )}
+            <a
+              href="/projects/Jian Marie Hilario - Portfolio.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:border-amber-400 dark:hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 font-mono text-[11px] font-bold tracking-widest uppercase text-editorial-charcoal dark:text-editorial-cream transition-all duration-300 flex items-center gap-1.5 cursor-pointer focus:outline-none"
+            >
+              Creative Portfolio
+            </a>
           </div>
 
           {/* Social Row */}
