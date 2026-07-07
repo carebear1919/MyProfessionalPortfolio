@@ -1,4 +1,4 @@
-﻿import { Project, SkillCategory, Experience, Service } from './types';
+import { Project, SkillCategory, Experience, Service } from './types';
 
 export const projects: Project[] = [
   {
@@ -240,24 +240,7 @@ export const projects: Project[] = [
     tagline: '@cso-council',
     images: ['/projects/CSOPIC.webp', '/projects/cso1.webp', '/projects/cso2.webp', '/projects/cso3.webp', '/projects/cso4.webp', '/projects/cso5.webp', '/projects/cso6.webp', '/projects/Task_HILARIO,JIAN MARIE L..webp']
   },
-  {
-    id: 'creative-design-portfolio',
-    title: 'Creative Design Portfolio',
-    subtitle: 'Curated compilation of best graphics works',
-    category: 'UI/UX',
-    description: 'A curated compilation of my best graphic design works, featuring publications, event posters, slogans, brochures, and promotional materials created throughout my creative journey. NOTE: This is a simple prototype created in Figma.',
-    longDescription: 'Comprehensive PDF design book compiling over 30 graphics layouts, vector posters, and corporate newsletters created under client contracts and university activities.',
-    tags: ['Photoshop', 'Canva', 'Figma', 'IbisPaint'],
-    links: {
-      live: '/resume/HILARIO_PORTFOLIO.pdf'
-    },
-    year: '2025',
-    role: 'Independent Designer',
-    featured: false,
-    mediaType: 'svg',
-    status: 'finished',
-    tagline: '@design-book'
-  },
+
   {
     id: 'portfolio-website',
     title: 'Portfolio Website',
@@ -288,7 +271,7 @@ export const projects: Project[] = [
     },
     year: '2025',
     role: 'Visual Coordinator',
-    featured: true,
+    featured: false,
     mediaType: 'svg',
     status: 'finished',
     tagline: '@hilario-creative',
