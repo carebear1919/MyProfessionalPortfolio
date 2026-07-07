@@ -9,6 +9,7 @@ export interface Project {
   links: {
     live?: string;
     github?: string;
+    canva?: string;
   };
   year: string;
   role: string;
@@ -17,6 +18,7 @@ export interface Project {
   status?: 'finished' | 'ongoing';
   tagline?: string;
   images?: string[];
+  pdfUrl?: string;
 }
 
 export interface SkillCategory {

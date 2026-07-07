@@ -67,7 +67,7 @@ export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
               alt="Jian Marie Hilario"
               width={380}
               height={475}
-              fetchpriority="high"
+              fetchPriority="high"
               loading="eager"
               decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"

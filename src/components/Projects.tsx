@@ -73,7 +73,7 @@ export default function Projects() {
   useEffect(() => {
     setActiveImageIndex(0);
     if (spotlightProject) {
-      setViewMode(spotlightProject.images && spotlightProject.images.length > 0 ? 'screenshots' : 'blueprint');
+      setViewMode(spotlightProject.images && spotlightProject.images.length > 0 || spotlightProject.pdfUrl ? 'screenshots' : 'blueprint');
     }
   }, [spotlightProject?.id]);
 
@@ -124,6 +124,22 @@ export default function Projects() {
       document.body.style.overflow = '';
     };
   }, [isLightboxOpen, lightboxImages.length]);
+
+  // Spotlight image keyboard navigation
+  useEffect(() => {
+    if (isLightboxOpen) return;
+    if (!spotlightProject || !spotlightProject.images || spotlightProject.images.length <= 1) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        setActiveImageIndex((prev) => (prev === 0 ? spotlightProject.images!.length - 1 : prev - 1));
+      }
+      if (e.key === 'ArrowRight') {
+        setActiveImageIndex((prev) => (prev === spotlightProject.images!.length - 1 ? 0 : prev + 1));
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isLightboxOpen, spotlightProject?.id]);
 
   // Helper for generating abstract beautiful design blueprint nodes
   const renderBlueprintSVG = (projectId: string) => {
@@ -250,6 +266,9 @@ export default function Projects() {
             <span className="font-mono text-[10.5px] text-neutral-500 dark:text-neutral-400 font-bold">
               Scroll or use arrows to navigate &bull; Click cards for expanded breakdowns
             </span>
+            <span className="font-mono text-[9px] text-neutral-400 dark:text-neutral-500 ml-1 hidden sm:inline">
+              &bull; Use <kbd className="px-1 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 font-bold">&larr;</kbd> <kbd className="px-1 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 font-bold">&rarr;</kbd> for image gallery
+            </span>
           </div>
 
           {/* Slider Arrows */}
@@ -299,7 +318,9 @@ export default function Projects() {
                   {/* Media Canvas: Blueprint or Screenshot Gallery */}
                   <div
                     onClick={() => {
-                      if (viewMode === 'screenshots' && spotlightProject.images && spotlightProject.images.length > 0) {
+                      if (spotlightProject.pdfUrl) {
+                        window.open(spotlightProject.pdfUrl, '_blank', 'noopener,noreferrer');
+                      } else if (viewMode === 'screenshots' && spotlightProject.images && spotlightProject.images.length > 0) {
                         setLightboxImages(spotlightProject.images);
                         setLightboxIndex(activeImageIndex);
                         setLightboxScale(1);
@@ -311,7 +332,7 @@ export default function Projects() {
                         setDrawerImageIndex(0);
                       }
                     }}
-                    className="relative aspect-[16/10] w-full border border-neutral-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center cursor-zoom-in group mb-8 overflow-hidden"
+                    className={`relative w-full border border-neutral-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center group mb-8 overflow-hidden ${spotlightProject.pdfUrl ? 'cursor-pointer' : 'cursor-zoom-in'}`}
                   >
                     {/* View Mode Toggle Controls */}
                     {spotlightProject.images && spotlightProject.images.length > 0 && (
@@ -345,12 +366,27 @@ export default function Projects() {
                       </div>
                     )}
 
-                    {viewMode === 'screenshots' && spotlightProject.images && spotlightProject.images.length > 0 ? (
-                      <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img">
+                    {viewMode === 'screenshots' && spotlightProject.pdfUrl && (!spotlightProject.images || spotlightProject.images.length === 0) ? (
+                      <div className="relative w-full flex items-center justify-center rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img cursor-pointer"
+                        onClick={(e) => { e.stopPropagation(); window.open(spotlightProject.pdfUrl, '_blank', 'noopener,noreferrer'); }}
+                      >
+                        <object
+                          data={spotlightProject.pdfUrl}
+                          type="application/pdf"
+                          className="w-full min-h-[50vh] max-h-[85vh]"
+                        >
+                          <p className="font-mono text-xs text-neutral-500 p-4 text-center">
+                            PDF preview unavailable.
+                            <a href={spotlightProject.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-500 underline ml-1">Open instead</a>
+                          </p>
+                        </object>
+                      </div>
+                    ) : viewMode === 'screenshots' && spotlightProject.images && spotlightProject.images.length > 0 ? (
+                      <div className="relative w-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img">
                         <img
                           src={spotlightProject.images[activeImageIndex]}
                           alt={`${spotlightProject.title} screenshot ${activeImageIndex + 1}`}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-[1.03]"
+                          className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
                           referrerPolicy="no-referrer"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
@@ -364,18 +400,19 @@ export default function Projects() {
 
                         {/* Interactive Image Navigation */}
                         {spotlightProject.images.length > 1 && (
-                          <div className="absolute inset-x-3 bottom-3 flex justify-between items-center z-10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                          <>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setActiveImageIndex((prev) => (prev === 0 ? spotlightProject.images!.length - 1 : prev - 1));
                               }}
-                              className="p-1.5 rounded-sm bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all"
+                              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all opacity-0 group-hover/img:opacity-100"
+                              aria-label="Previous image"
                             >
-                              <ArrowLeft size={10} />
+                              <ArrowLeft size={14} />
                             </button>
                             
-                            <span className="font-mono text-[9px] font-bold text-white px-2 py-0.5 rounded-sm bg-neutral-900/85 border border-neutral-800/40 backdrop-blur-sm select-none">
+                            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 font-mono text-[9px] font-bold text-white px-2 py-0.5 rounded-sm bg-neutral-900/85 border border-neutral-800/40 backdrop-blur-sm select-none opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
                               {activeImageIndex + 1} / {spotlightProject.images.length}
                             </span>
 
@@ -384,11 +421,12 @@ export default function Projects() {
                                 e.stopPropagation();
                                 setActiveImageIndex((prev) => (prev === spotlightProject.images!.length - 1 ? 0 : prev + 1));
                               }}
-                              className="p-1.5 rounded-sm bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all"
+                              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all opacity-0 group-hover/img:opacity-100"
+                              aria-label="Next image"
                             >
-                              <ArrowRight size={10} />
+                              <ArrowRight size={14} />
                             </button>
-                          </div>
+                          </>
                         )}
 
                         {/* Drop-in guidance placeholder */}
@@ -410,7 +448,7 @@ export default function Projects() {
                     
                     {/* Hover Overlay */}
                     <div className="absolute inset-x-0 bottom-0 bg-neutral-950/60 opacity-0 group-hover:opacity-100 py-2 flex items-center justify-center transition-opacity duration-300 text-white font-mono text-[9px] tracking-widest uppercase select-none pointer-events-none z-10">
-                      Click to view detailed specs & gallery
+                      {spotlightProject.pdfUrl ? 'Click to open PDF' : 'Click to view detailed specs & gallery'}
                     </div>
                   </div>
 
@@ -456,14 +494,14 @@ export default function Projects() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-3">
                     <button
                       onClick={() => {
                         setActiveProject(spotlightProject);
-                        setDrawerViewMode(spotlightProject.images && spotlightProject.images.length > 0 ? 'screenshots' : 'blueprint');
+                        setDrawerViewMode(spotlightProject.images && spotlightProject.images.length > 0 || spotlightProject.pdfUrl ? 'screenshots' : 'blueprint');
                         setDrawerImageIndex(0);
                       }}
-                      className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400 border-b border-indigo-400/40 dark:border-indigo-600/40 pb-0.5 hover:opacity-80 transition-opacity cursor-pointer"
+                      className="px-4 py-2 rounded-sm border border-neutral-300 dark:border-neutral-700 hover:border-editorial-charcoal dark:hover:border-editorial-cream text-editorial-charcoal dark:text-editorial-cream font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 cursor-pointer bg-white/80 dark:bg-neutral-950/80 hover:bg-neutral-100 dark:hover:bg-neutral-900 shadow-sm"
                     >
                       Full Breakdown <ArrowUpRight size={11} />
                     </button>
@@ -472,7 +510,7 @@ export default function Projects() {
                         href={spotlightProject.links.live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream border-b border-current pb-0.5 hover:opacity-80 transition-opacity"
+                        className="px-4 py-2 rounded-sm bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal hover:bg-neutral-800 dark:hover:bg-neutral-200 font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 shadow-sm cursor-pointer"
                       >
                         View Project / Demo <ArrowUpRight size={11} />
                       </a>
@@ -480,6 +518,16 @@ export default function Projects() {
                       <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-widest bg-neutral-100 dark:bg-neutral-900 px-2.5 py-1 rounded">
                         Enterprise / Offline Project
                       </span>
+                    )}
+                    {spotlightProject.links.canva && (
+                      <a
+                        href={spotlightProject.links.canva}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 rounded-sm border border-neutral-300 dark:border-neutral-700 hover:border-indigo-500 dark:hover:border-indigo-400 text-indigo-600 dark:text-indigo-400 font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 cursor-pointer bg-white/80 dark:bg-neutral-950/80 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 shadow-sm"
+                      >
+                        View on Canva <ArrowUpRight size={11} />
+                      </a>
                     )}
                   </div>
                 </div>
@@ -648,6 +696,7 @@ export default function Projects() {
                   </div>
 
                   {/* Visual Gallery Showcase */}
+                  {(activeProject.images?.length > 0 || activeProject.pdfUrl) && (
                   <div className="space-y-4 mb-8">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400 uppercase block font-bold tracking-widest">
@@ -679,20 +728,39 @@ export default function Projects() {
                       )}
                     </div>
 
-                    <div className="relative aspect-[16/10] w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center overflow-hidden">
-                      {drawerViewMode === 'screenshots' && activeProject.images && activeProject.images.length > 0 ? (
-                        <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img cursor-zoom-in">
+                    <div className="relative w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center overflow-hidden">
+                      {drawerViewMode === 'screenshots' && activeProject.pdfUrl && (!activeProject.images || activeProject.images.length === 0) ? (
+                        <div className="relative w-full flex items-center justify-center rounded-sm bg-neutral-50 dark:bg-neutral-950/20 cursor-pointer"
+                          onClick={(e) => { e.stopPropagation(); window.open(activeProject.pdfUrl, '_blank', 'noopener,noreferrer'); }}
+                        >
+                          <object
+                            data={activeProject.pdfUrl}
+                            type="application/pdf"
+                            className="w-full min-h-[50vh] max-h-[85vh]"
+                          >
+                            <p className="font-mono text-xs text-neutral-500 p-4 text-center">
+                              PDF preview unavailable.
+                              <a href={activeProject.pdfUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-500 underline ml-1">Open instead</a>
+                            </p>
+                          </object>
+                        </div>
+                      ) : drawerViewMode === 'screenshots' && activeProject.images && activeProject.images.length > 0 ? (
+                        <div className="relative w-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img cursor-zoom-in">
                           <img
                             src={activeProject.images[drawerImageIndex]}
                             alt={`${activeProject.title} screenshot ${drawerImageIndex + 1}`}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-[1.03]"
+                            className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
                             referrerPolicy="no-referrer"
                             onClick={() => {
-                              setLightboxImages(activeProject.images!);
-                              setLightboxIndex(drawerImageIndex);
-                              setLightboxScale(1);
-                              setLightboxPosition({ x: 0, y: 0 });
-                              setIsLightboxOpen(true);
+                              if (activeProject.pdfUrl) {
+                                window.open(activeProject.pdfUrl, '_blank', 'noopener,noreferrer');
+                              } else {
+                                setLightboxImages(activeProject.images!);
+                                setLightboxIndex(drawerImageIndex);
+                                setLightboxScale(1);
+                                setLightboxPosition({ x: 0, y: 0 });
+                                setIsLightboxOpen(true);
+                              }
                             }}
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
@@ -706,18 +774,19 @@ export default function Projects() {
 
                           {/* Interactive Image Navigation */}
                           {activeProject.images.length > 1 && (
-                            <div className="absolute inset-x-3 bottom-3 flex justify-between items-center z-10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                            <>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setDrawerImageIndex((prev) => (prev === 0 ? activeProject.images!.length - 1 : prev - 1));
                                 }}
-                                className="p-1.5 rounded-sm bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all"
+                                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all opacity-0 group-hover/img:opacity-100"
+                                aria-label="Previous image"
                               >
-                                <ArrowLeft size={10} />
+                                <ArrowLeft size={14} />
                               </button>
                               
-                              <span className="font-mono text-[9px] font-bold text-white px-2 py-0.5 rounded-sm bg-neutral-900/85 border border-neutral-800/40 backdrop-blur-sm select-none">
+                              <span className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 font-mono text-[9px] font-bold text-white px-2 py-0.5 rounded-sm bg-neutral-900/85 border border-neutral-800/40 backdrop-blur-sm select-none opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
                                 {drawerImageIndex + 1} / {activeProject.images.length}
                               </span>
 
@@ -726,11 +795,12 @@ export default function Projects() {
                                   e.stopPropagation();
                                   setDrawerImageIndex((prev) => (prev === activeProject.images!.length - 1 ? 0 : prev + 1));
                                 }}
-                                className="p-1.5 rounded-sm bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-neutral-900/85 text-white hover:bg-neutral-950 cursor-pointer border border-neutral-800/40 backdrop-blur-sm transition-all opacity-0 group-hover/img:opacity-100"
+                                aria-label="Next image"
                               >
-                                <ArrowRight size={10} />
+                                <ArrowRight size={14} />
                               </button>
-                            </div>
+                            </>
                           )}
 
                           {/* Drop-in guidance placeholder */}
@@ -741,7 +811,7 @@ export default function Projects() {
                             <span className="font-serif italic text-xs font-bold text-neutral-800 dark:text-neutral-200 block">
                               Image Asset Required
                             </span>
-                            <p className="text-[10px] font-mono text-neutral-400 max-w-[220px] mt-2 leading-relaxed">
+                            <p className="text-[10px] font-mono text-neutral-400 max-w-[220px] pt-2 leading-relaxed">
                               Place <code className="bg-neutral-200 dark:bg-neutral-950 px-1 py-0.5 rounded text-neutral-600 dark:text-neutral-300">{activeProject.images[drawerImageIndex].split('/').pop()}</code> inside <code className="bg-neutral-200 dark:bg-neutral-950 px-1 py-0.5 rounded text-neutral-600 dark:text-neutral-300">/public/projects/</code> to load screenshot.
                             </p>
                           </div>
@@ -752,11 +822,14 @@ export default function Projects() {
                     </div>
                     
                     <span className="font-mono text-[10.5px] text-neutral-500 dark:text-neutral-400 block text-center font-bold">
-                      {drawerViewMode === 'screenshots' && activeProject.images && activeProject.images.length > 0
+                      {drawerViewMode === 'screenshots' && activeProject.pdfUrl && (!activeProject.images || activeProject.images.length === 0)
+                        ? `PDF preview — ${activeProject.title}`
+                        : drawerViewMode === 'screenshots' && activeProject.images && activeProject.images.length > 0
                         ? `Screenshot view ${drawerImageIndex + 1} of ${activeProject.images.length}`
                         : `System blueprint view for ${activeProject.title}`}
                     </span>
                   </div>
+                  )}
 
                   {/* Tech Stack List */}
                   <div className="space-y-3 mb-8">
@@ -798,6 +871,16 @@ export default function Projects() {
                       Repository <Github size={13} />
                     </a>
                   )}
+                  {activeProject.links.canva && (
+                    <a
+                      href={activeProject.links.canva}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="min-touch-wide px-6 rounded-sm border border-neutral-300 dark:border-neutral-700 hover:border-editorial-charcoal dark:hover:border-editorial-cream text-editorial-charcoal dark:text-editorial-cream font-mono text-xs font-bold uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
+                    >
+                      View on Canva <ExternalLink size={13} />
+                    </a>
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -815,7 +898,7 @@ export default function Projects() {
               onClick={() => setIsLightboxOpen(false)}
             >
               <div
-                className="relative w-full h-full flex items-center justify-center"
+                className="relative flex items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Close */}

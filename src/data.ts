@@ -283,15 +283,16 @@ export const projects: Project[] = [
     longDescription: 'A beautiful visual catalog documenting brand concepts, modern vector layouts, typography assets, and custom illustrations compiled across creative projects.',
     tags: ['Photoshop', 'Canva', 'Figma', 'Illustrator'],
     links: {
-      live: '/resume/Hilario_Portfolio.pdf'
+      live: '/projects/Jian Marie Hilario \u2014 Portfolio.pdf',
+      canva: 'https://canva.link/f6xn3atopprl6rq'
     },
     year: '2025',
     role: 'Visual Coordinator',
-    featured: false,
+    featured: true,
     mediaType: 'svg',
     status: 'finished',
     tagline: '@hilario-creative',
-    images: ['/projects/thumbnail.webp']
+    pdfUrl: '/projects/Jian Marie Hilario \u2014 Portfolio.pdf'
   },
   {
     id: 'score-manual',
