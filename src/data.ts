@@ -335,6 +335,25 @@ export const projects: Project[] = [
     images: ['/projects/RetroCalc1.webp', '/projects/RetroCalc2.webp', '/projects/RetroCalc3.webp']
   },
   {
+    id: 'kaela-borbon-portfolio',
+    title: 'Kaela V. Borbon — Interior Design Portfolio',
+    subtitle: 'Editorial interior design case-study site',
+    category: 'Web Development',
+    description: 'A premium, editorial-style portfolio website for an interior design graduate, showcasing 6 case-study projects (residential, hospitality, community/thesis, and furniture design work) plus About and Contact pages. Built from a component-driven single-page architecture with hash-based routing, custom hero image carousels, and a lightbox gallery system.',
+    longDescription: 'Data-driven project pages: a single Project type/schema drives 6 distinct case studies, each with mood boards, concept sections, floor plans, material palettes, and photo galleries. Custom HeroRotator component auto-crossfades hero banners cycling through each project\'s landscape imagery. Lightbox component with keyboard navigation (arrow keys, escape) and paired-image sets per section. Masonry-style image grids for uneven-aspect-ratio gallery photography. Responsive editorial grid system with asymmetric column-span layouts and staggered card heights. Reusable design tokens (ink/paper/slate/mist/navy palette, serif+mono type pairing) applied consistently across 10+ page layouts, built with a custom hash-based client-side router (no external routing library).',
+    tags: ['React 19', 'TypeScript', 'Vite 6', 'Tailwind CSS v4', 'lucide-react'],
+    links: {
+      live: 'https://kaela-borbon.vercel.app/#home'
+    },
+    year: '2026',
+    role: 'Full-Stack Developer',
+    featured: true,
+    mediaType: 'image',
+    status: 'finished',
+    tagline: '@kaela-borbon',
+    images: ['/projects/Home-Banner.png', '/projects/Home-About-Highlights.png', '/projects/Home-Footer.png', '/projects/About.png', '/projects/SampleProject-Section1.png', '/projects/SampleProject-Section2.png', '/projects/SampleProject-Section3.png', '/projects/SampleProject-Section4.png', '/projects/Project-Gallery.png', '/projects/Contact.png']
+  },
+  {
     id: 'score-poster',
     title: 'S-CORE Promotional Poster',
     subtitle: 'High-contrast campaign poster',

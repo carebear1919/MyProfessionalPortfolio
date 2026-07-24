@@ -334,37 +334,6 @@ export default function Projects() {
                     }}
                     className={`relative w-full border border-neutral-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center group mb-8 overflow-hidden ${spotlightProject.pdfUrl ? 'cursor-pointer' : 'cursor-zoom-in'}`}
                   >
-                    {/* View Mode Toggle Controls */}
-                    {spotlightProject.images && spotlightProject.images.length > 0 && (
-                      <div className="absolute top-3 left-3 z-20 flex gap-1 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-sm p-1 rounded-sm border border-neutral-200/40 dark:border-neutral-800/40 shadow-sm">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setViewMode('screenshots');
-                          }}
-                          className={`px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider rounded-sm transition-all cursor-pointer ${
-                            viewMode === 'screenshots'
-                              ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
-                              : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-                          }`}
-                        >
-                          Screenshots
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setViewMode('blueprint');
-                          }}
-                          className={`px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider rounded-sm transition-all cursor-pointer ${
-                            viewMode === 'blueprint'
-                              ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
-                              : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-                          }`}
-                        >
-                          Blueprint
-                        </button>
-                      </div>
-                    )}
 
                     {viewMode === 'screenshots' && spotlightProject.pdfUrl && (!spotlightProject.images || spotlightProject.images.length === 0) ? (
                       <div className="relative w-full flex items-center justify-center rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img cursor-pointer"
@@ -702,30 +671,6 @@ export default function Projects() {
                       <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400 uppercase block font-bold tracking-widest">
                         Visual Gallery
                       </span>
-                      {activeProject.images && activeProject.images.length > 0 && (
-                        <div className="flex gap-1 bg-neutral-100 dark:bg-neutral-900/60 p-0.5 rounded-sm border border-neutral-200/40 dark:border-neutral-800/40">
-                          <button
-                            onClick={() => setDrawerViewMode('screenshots')}
-                            className={`px-2 py-0.5 font-mono text-[8.5px] font-bold uppercase tracking-wider rounded-sm transition-all cursor-pointer ${
-                              drawerViewMode === 'screenshots'
-                                ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
-                                : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-                            }`}
-                          >
-                            Screenshots
-                          </button>
-                          <button
-                            onClick={() => setDrawerViewMode('blueprint')}
-                            className={`px-2 py-0.5 font-mono text-[8.5px] font-bold uppercase tracking-wider rounded-sm transition-all cursor-pointer ${
-                              drawerViewMode === 'blueprint'
-                                ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
-                                : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-                            }`}
-                          >
-                            Blueprint
-                          </button>
-                        </div>
-                      )}
                     </div>
 
                     <div className="relative w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/40 p-4 rounded-sm flex items-center justify-center overflow-hidden">
