@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Download } from 'lucide-react';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import SelectedWork from './components/SelectedWork';
 import Projects from './components/Projects';
 import About from './components/About';
 import Services from './components/Services';
@@ -130,6 +131,9 @@ export default function App() {
           <div id="home">
             <Hero scrollToSection={scrollToSection} onOpenResume={() => setIsResumeOpen(true)} />
           </div>
+
+          {/* 1.5 Selected Work Preview Strip */}
+          <SelectedWork scrollToSection={scrollToSection} />
 
           {/* 2. Shipped Projects Section */}
           <Projects />

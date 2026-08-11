@@ -141,17 +141,50 @@ export default function About({ onOpenResume }: AboutProps) {
               </h3>
             </div>
             
-            <p className="font-sans font-light text-sm sm:text-base leading-relaxed text-neutral-500 dark:text-neutral-400">
-              I architect and ship interaction-driven UI systems &mdash; from responsive design ecosystems to real-time data interfaces &mdash; using modern React and TypeScript architecture with production-secure foundations.
-            </p>
-            <p className="font-sans font-light text-sm sm:text-base leading-relaxed text-neutral-500 dark:text-neutral-400">
-              My practice is rooted in systems thinking and deliberate interaction design, preferring to write type-safe React components and configure live data pipelines over any drag-and-drop abstraction layer.
-            </p>
-            <p className="font-sans font-light text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 italic">
-              Every interface I ship is built to be responsive, accessible, and automation-ready &mdash; from the first component tree to the final deploy.
-            </p>
+            <div className="space-y-6">
+              {[
+                {
+                  label: 'Systems Architecture',
+                  text: 'I architect and ship interaction-driven UI systems — from responsive design ecosystems to real-time data interfaces — using modern React and TypeScript architecture with production-secure foundations.',
+                },
+                {
+                  label: 'Deliberate Engineering',
+                  text: 'My practice is rooted in systems thinking and deliberate interaction design, preferring to write type-safe React components and configure live data pipelines over any drag-and-drop abstraction layer.',
+                },
+                {
+                  label: 'Ship Standard',
+                  text: 'Every interface I ship is built to be responsive, accessible, and automation-ready — from the first component tree to the final deploy.',
+                },
+              ].map((principle, idx) => (
+                <div key={principle.label} className="flex gap-4 border-l-2 border-neutral-200 dark:border-neutral-800 pl-4 group hover:border-editorial-charcoal dark:hover:border-editorial-cream transition-colors duration-300">
+                  <span className="font-mono text-[10px] font-bold text-neutral-400 dark:text-neutral-500 pt-0.5 flex-shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <div>
+                    <span className="block font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream mb-1.5">
+                      {principle.label}
+                    </span>
+                    <p className="font-sans font-light text-sm sm:text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                      {principle.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-            <div className="pt-6">
+            {/* Focus Tags */}
+            <div className="flex flex-wrap gap-2 pt-2">
+              {['React', 'TypeScript', 'Realtime Data', 'Design Systems', 'Automation'].map((tag) => (
+                <span
+                  key={tag}
+                  className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-800 rounded-full px-3 py-1 bg-neutral-50/60 dark:bg-neutral-950/40"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="pt-4">
               <button
                 onClick={onOpenResume}
                 className="min-touch-wide inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream border border-neutral-300 dark:border-neutral-700 px-5 hover:bg-neutral-50 dark:hover:bg-neutral-950 transition-all cursor-pointer focus:outline-none"

@@ -8,7 +8,7 @@ interface HeroProps {
 export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-between pt-8 pb-14 px-6 sm:px-10 lg:px-16 overflow-hidden bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
+    <section className="relative min-h-[92vh] lg:min-h-[88vh] flex flex-col justify-between pt-8 pb-14 px-6 sm:px-10 lg:px-16 overflow-hidden bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
 
       {/* Corner brackets */}
       <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
@@ -45,21 +45,39 @@ export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
       {/* HERO BODY */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center flex-grow py-6 md:py-10 relative z-10">
 
-        {/* Left Column — Discipline Tags (Desktop only) */}
-        <div className="lg:col-span-3 hidden lg:flex flex-col justify-center space-y-3 pointer-events-none select-none lg:border-r lg:border-neutral-300 dark:lg:border-neutral-700 lg:pr-8">
-          {(['Graphic Design', 'Front End Dev', 'UI/UX'] as const).map((text) => (
-            <span
-              key={text}
-              className="font-mono text-[11px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 border-l-2 border-neutral-300 dark:border-neutral-700 pl-3 leading-tight"
-            >
-              {text}
-            </span>
-          ))}
+        {/* Left Column — Discipline Tags + Quick Stats (Desktop only) */}
+        <div className="lg:col-span-3 hidden lg:flex flex-col justify-center gap-10 pointer-events-none select-none lg:border-r lg:border-neutral-300 dark:lg:border-neutral-700 lg:pr-8">
+          <div className="space-y-3">
+            {(['Graphic Design', 'Front End Dev', 'UI/UX'] as const).map((text) => (
+              <span
+                key={text}
+                className="font-mono text-[11px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 border-l-2 border-neutral-300 dark:border-neutral-700 pl-3 leading-tight block"
+              >
+                {text}
+              </span>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 border-t border-neutral-200 dark:border-neutral-800 pt-6">
+            {[
+              { value: '4+', label: 'Years Building' },
+              { value: '12+', label: 'Projects Shipped' },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <span className="block text-2xl font-serif italic font-bold text-editorial-charcoal dark:text-editorial-cream leading-none">
+                  {stat.value}
+                </span>
+                <span className="block mt-1.5 font-mono text-[9px] font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Center Column — Portrait */}
         <div className="lg:col-span-6 flex justify-center relative">
-          <div className="relative w-full max-w-[380px] aspect-[4/5] bg-neutral-100/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-sm shadow-sm overflow-hidden group">
+          <div className="relative w-full max-w-[380px] lg:max-w-[440px] xl:max-w-[480px] aspect-[4/5] bg-neutral-100/50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-sm shadow-sm overflow-hidden group">
 
             {/* Profile Photo */}
             <img

@@ -1,8 +1,28 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ExternalLink, Github, ArrowUpRight, ArrowLeft, ArrowRight, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { Project } from '../types';
 import { projects } from '../data';
+
+// Wraps a website screenshot in a lightweight browser-window chrome
+function BrowserFrame({ url, children }: { url?: string; children: ReactNode }) {
+  const domain = url ? url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'localhost';
+  return (
+    <div className="w-full rounded-sm overflow-hidden border border-neutral-200/60 dark:border-neutral-800/60">
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200/60 dark:border-neutral-800/60">
+        <div className="flex gap-1.5 flex-shrink-0">
+          <span className="w-2 h-2 rounded-full bg-red-400/70" />
+          <span className="w-2 h-2 rounded-full bg-yellow-400/70" />
+          <span className="w-2 h-2 rounded-full bg-green-400/70" />
+        </div>
+        <div className="flex-1 mx-2 px-3 py-0.5 rounded-full bg-white dark:bg-neutral-950 text-[9px] font-mono text-neutral-500 dark:text-neutral-400 truncate text-center">
+          {domain}
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
 
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -352,20 +372,39 @@ export default function Projects() {
                       </div>
                     ) : viewMode === 'screenshots' && spotlightProject.images && spotlightProject.images.length > 0 ? (
                       <div className="relative w-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img">
-                        <img
-                          src={spotlightProject.images[activeImageIndex]}
-                          alt={`${spotlightProject.title} screenshot ${activeImageIndex + 1}`}
-                          className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
-                          referrerPolicy="no-referrer"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            const pNode = e.currentTarget.parentElement;
-                            if (pNode) {
-                              const fallback = pNode.querySelector('.img-fallback-placeholder') as HTMLElement;
-                              if (fallback) fallback.style.display = 'flex';
-                            }
-                          }}
-                        />
+                        {spotlightProject.category === 'Web Development' ? (
+                          <BrowserFrame url={spotlightProject.links.live}>
+                            <img
+                              src={spotlightProject.images[activeImageIndex]}
+                              alt={`${spotlightProject.title} screenshot ${activeImageIndex + 1}`}
+                              className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
+                              referrerPolicy="no-referrer"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                const pNode = e.currentTarget.closest('.group\\/img');
+                                if (pNode) {
+                                  const fallback = pNode.querySelector('.img-fallback-placeholder') as HTMLElement;
+                                  if (fallback) fallback.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          </BrowserFrame>
+                        ) : (
+                          <img
+                            src={spotlightProject.images[activeImageIndex]}
+                            alt={`${spotlightProject.title} screenshot ${activeImageIndex + 1}`}
+                            className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
+                            referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const pNode = e.currentTarget.parentElement;
+                              if (pNode) {
+                                const fallback = pNode.querySelector('.img-fallback-placeholder') as HTMLElement;
+                                if (fallback) fallback.style.display = 'flex';
+                              }
+                            }}
+                          />
+                        )}
 
                         {/* Interactive Image Navigation */}
                         {spotlightProject.images.length > 1 && (
@@ -691,31 +730,38 @@ export default function Projects() {
                         </div>
                       ) : drawerViewMode === 'screenshots' && activeProject.images && activeProject.images.length > 0 ? (
                         <div className="relative w-full flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50 dark:bg-neutral-950/20 group/img cursor-zoom-in">
-                          <img
-                            src={activeProject.images[drawerImageIndex]}
-                            alt={`${activeProject.title} screenshot ${drawerImageIndex + 1}`}
-                            className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
-                            referrerPolicy="no-referrer"
-                            onClick={() => {
-                              if (activeProject.pdfUrl) {
-                                window.open(activeProject.pdfUrl, '_blank', 'noopener,noreferrer');
-                              } else {
-                                setLightboxImages(activeProject.images!);
-                                setLightboxIndex(drawerImageIndex);
-                                setLightboxScale(1);
-                                setLightboxPosition({ x: 0, y: 0 });
-                                setIsLightboxOpen(true);
-                              }
-                            }}
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                              const pNode = e.currentTarget.parentElement;
-                              if (pNode) {
-                                const fallback = pNode.querySelector('.img-fallback-placeholder') as HTMLElement;
-                                if (fallback) fallback.style.display = 'flex';
-                              }
-                            }}
-                          />
+                          {(() => {
+                            const imgEl = (
+                              <img
+                                src={activeProject.images[drawerImageIndex]}
+                                alt={`${activeProject.title} screenshot ${drawerImageIndex + 1}`}
+                                className="w-full object-contain max-h-[70vh] transition-transform duration-500 group-hover/img:scale-[1.03]"
+                                referrerPolicy="no-referrer"
+                                onClick={() => {
+                                  if (activeProject.pdfUrl) {
+                                    window.open(activeProject.pdfUrl, '_blank', 'noopener,noreferrer');
+                                  } else {
+                                    setLightboxImages(activeProject.images!);
+                                    setLightboxIndex(drawerImageIndex);
+                                    setLightboxScale(1);
+                                    setLightboxPosition({ x: 0, y: 0 });
+                                    setIsLightboxOpen(true);
+                                  }
+                                }}
+                                onError={(e) => {
+                                  e.currentTarget.style.display = 'none';
+                                  const pNode = e.currentTarget.closest('.group\\/img');
+                                  if (pNode) {
+                                    const fallback = pNode.querySelector('.img-fallback-placeholder') as HTMLElement;
+                                    if (fallback) fallback.style.display = 'flex';
+                                  }
+                                }}
+                              />
+                            );
+                            return activeProject.category === 'Web Development' ? (
+                              <BrowserFrame url={activeProject.links.live}>{imgEl}</BrowserFrame>
+                            ) : imgEl;
+                          })()}
 
                           {/* Interactive Image Navigation */}
                           {activeProject.images.length > 1 && (

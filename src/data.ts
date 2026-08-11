@@ -351,7 +351,26 @@ export const projects: Project[] = [
     mediaType: 'image',
     status: 'finished',
     tagline: '@kaela-borbon',
-    images: ['/projects/Home-Banner.png', '/projects/Home-About-Highlights.png', '/projects/Home-Footer.png', '/projects/About.png', '/projects/SampleProject-Section1.png', '/projects/SampleProject-Section2.png', '/projects/SampleProject-Section3.png', '/projects/SampleProject-Section4.png', '/projects/Project-Gallery.png', '/projects/Contact.png']
+    images: ['/projects/Home-Banner.webp', '/projects/Home-About-Highlights.webp', '/projects/Home-Footer.webp', '/projects/About.webp', '/projects/SampleProject-Section1.webp', '/projects/SampleProject-Section2.webp', '/projects/SampleProject-Section3.webp', '/projects/SampleProject-Section4.webp', '/projects/Project-Gallery.webp', '/projects/Contact.webp']
+  },
+  {
+    id: 'renta',
+    title: 'Renta — Rental Income & Expense Tracker',
+    subtitle: 'Offline-capable PWA for small rental businesses',
+    category: 'Web Development',
+    description: "An installable, offline-capable PWA for tracking rent collected, expenses, and tenant payment status. Built around my mom's actual day-to-day workflow for our family's small rental business, but generic enough for anyone managing a handful of rental units.",
+    longDescription: 'Dashboard with monthly rent collected, expenses, and running balance, plus a color-coded "Need to Pay" list sorted by urgency. Tenant management with property photos, housing vs. business property type, per-tenant payment history, and full CRUD. Payment tracking supports partial payments with automatic balance-owed calculation and a filterable cross-tenant payment log. Expense tracking is categorized (Medicine & Health, Repairs, Other) with month-over-month trend and category-breakdown pie charts. One-tap SMS/Messenger reminder generation from an editable template — deliberately never auto-logs a reminder as sent, requiring explicit confirmation since the app can\'t see into the other messaging app. Monthly PDF (portrait/landscape) and Excel exports include a full tenant payment-status breakdown, formatted tables with totals, category pie chart, and 6-month trend chart. Interactive first-run onboarding tour with live mini-demos, replayable anytime from Settings. Real email/password accounts plus a separate PIN lock required every app open regardless of login state. Installable PWA with a custom service worker for full offline use and background sync.\n\nDual-backend data layer: the same db.addTenant() / db.updateSettings() API surface works against either Supabase or localStorage, so the app degrades gracefully offline. Optimistic UI with realtime reconciliation — writes apply locally and re-render instantly, then sync to Supabase in the background, with realtime subscriptions merging in changes from other devices/sessions. Self-hosted hand-drawn inline-SVG icon system and self-built SVG charts, zero icon-font or charting-library dependency. Security-conscious by default: Postgres tables scoped to auth.uid() via Row Level Security, SHA-256 PIN hashing, no third-party analytics/tracking, and dependency choices made to avoid known-vulnerable libraries (e.g. HTML-table-as-.xls export instead of SheetJS/xlsx).',
+    tags: ['React 18', 'Vite', 'React Router v6', 'Tailwind CSS v4', 'Supabase', 'Deno Edge Functions', 'jsPDF', 'PWA'],
+    links: {
+      live: 'https://upa-tracker.vercel.app'
+    },
+    year: '2026',
+    role: 'Full-Stack Developer',
+    featured: true,
+    mediaType: 'image',
+    status: 'finished',
+    tagline: '@renta',
+    images: ['/projects/renta1.webp', '/projects/renta2.webp', '/projects/renta3.webp', '/projects/renta4.webp', '/projects/renta5.webp', '/projects/renta6.webp', '/projects/renta7.webp']
   },
   {
     id: 'score-poster',
