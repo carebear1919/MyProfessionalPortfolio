@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Github, Linkedin, ArrowUpRight, Send, CheckCircle } from 'lucide-react';
+import { ArrowUpRight, Send, CheckCircle } from 'lucide-react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const validateField = (name: string, value: string): string => {
@@ -14,6 +15,7 @@ export default function Contact() {
       case 'name':
         if (!value.trim()) return 'Name is required';
         if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        if (value.length > 100) return 'Name must be 100 characters or fewer';
         return '';
       case 'email':
         if (!value.trim()) return 'Email is required';
@@ -22,6 +24,7 @@ export default function Contact() {
       case 'message':
         if (!value.trim()) return 'Message is required';
         if (value.trim().length < 10) return 'Message must be at least 10 characters';
+        if (value.length > 5000) return 'Message must be 5000 characters or fewer';
         return '';
       default:
         return '';
@@ -55,9 +58,10 @@ export default function Contact() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+    if (isSubmitting) return; // block double submits
+
     // Validate all fields
     const errors: Record<string, string> = {};
     (['name', 'email', 'message'] as const).forEach((field) => {
@@ -67,58 +71,74 @@ export default function Contact() {
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      // Move focus to the first field that needs attention
+      const firstInvalid = (['name', 'email', 'message'] as const).find((f) => errors[f]);
+      if (firstInvalid) formRef.current?.querySelector<HTMLElement>(`#${firstInvalid}`)?.focus();
+      return;
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      setSubmitError("You appear to be offline. Your message is still here. Reconnect and try again.");
       return;
     }
 
     setIsSubmitting(true);
-    setSubmitError(false);
+    setSubmitError(null);
 
+    const form = new FormData(e.currentTarget);
     const payload = {
       name: formData.name.trim(),
       email: formData.email.trim(),
       subject: formData.subject.trim(),
       message: formData.message.trim(),
+      website: String(form.get('website') || ''), // honeypot, left empty by real visitors
     };
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
 
     fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     })
       .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.errors?.[0] || data.error || 'Request failed');
+        let data: { success?: boolean; sent?: boolean; errors?: string[]; error?: string } = {};
+        try {
+          data = await res.json();
+        } catch {
+          // Non-JSON response (for example the API is not deployed)
         }
-        setIsSubmitting(false);
+        if (res.status === 400 && data.errors?.length) {
+          throw new Error(data.errors[0]);
+        }
+        if (res.status === 429) {
+          throw new Error('Too many messages in a short time. Please wait a few minutes, or email me directly.');
+        }
+        if (!res.ok || !data.success || data.sent === false) {
+          throw new Error('The message could not be delivered.');
+        }
         setIsSubmitted(true);
         setFormData({ name: '', email: '', subject: '', message: '' });
+        setFieldErrors({});
       })
-      .catch(() => {
+      .catch((err: Error) => {
+        setSubmitError(
+          err.name === 'AbortError'
+            ? 'The request timed out. Your message is still here. Please try again.'
+            : err.message || 'The message could not be sent.'
+        );
+      })
+      .finally(() => {
+        window.clearTimeout(timeout);
         setIsSubmitting(false);
-        setSubmitError(true);
       });
   };
 
   return (
-    <section id="contact" className="relative py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left overflow-hidden">
-      {/* Vertical margin rules */}
-      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
-      {/* Corner brackets */}
-      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      
-      {/* BACKGROUND WATERMARK */}
-      <div className="absolute right-0 bottom-0 select-none pointer-events-none z-0 opacity-[0.03] dark:opacity-[0.02] translate-y-12 translate-x-12">
-        <h2 className="text-[25vw] font-serif font-black tracking-tighter leading-none uppercase">
-          CONTACT
-        </h2>
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <section id="contact" className="py-24 px-6 sm:px-10 lg:px-16 border-t border-neutral-300 bg-editorial-cream text-left">
+      <div className="max-w-[1440px] mx-auto relative z-10">
         
         {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -126,31 +146,25 @@ export default function Contact() {
           {/* Left Column - Contact Details */}
           <div className="lg:col-span-5 space-y-8 sticky lg:top-24">
             <div>
-              {/* STATUS BADGE */}
-              <div className="inline-flex items-center gap-1.5 font-mono text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-blue-500/10 to-violet-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/15 px-2.5 py-0.5 rounded-full mb-4">
-                <span className="w-1.5 h-1.5 bg-gradient-to-r from-blue-500 to-violet-500 rounded-full animate-pulse"></span>
-                STATUS: ONLINE
-              </div>
-
-              <h2 className="font-serif font-bold tracking-tight text-3xl sm:text-4xl md:text-5xl text-editorial-charcoal dark:text-editorial-cream mb-4">
-                Initialize Connection.
+              <h2 className="font-serif font-medium tracking-tight text-4xl sm:text-5xl text-editorial-charcoal mb-4">
+                Let&apos;s build something reliable.
               </h2>
-              <p className="font-sans text-xs sm:text-[13px] leading-relaxed font-light text-neutral-500 dark:text-neutral-400">
-                Have questions or ready to transform your vision into secure code and responsive UI suites?
+              <p className="font-sans text-base leading-relaxed text-neutral-600">
+                I&apos;m open to QA, full-stack and UI/UX roles. If you have a product to ship, or one that needs testing, let&apos;s talk.
               </p>
             </div>
 
             {/* Direct Contact Links */}
-            <div className="border-t border-neutral-200 dark:border-neutral-900 pt-8 space-y-6">
+            <div className="border-t border-neutral-300 pt-8 space-y-6">
               
               {/* Link 1 */}
               <div className="group">
-                <span className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 block mb-1 font-bold">
-                  01 // Direct Work Mail
+                <span className="font-mono text-xs uppercase tracking-widest text-neutral-600 block mb-1 font-bold">
+                  Email
                 </span>
                 <a
                   href="mailto:jianhilario@gmail.com"
-                  className="font-serif italic text-base sm:text-lg font-bold text-editorial-charcoal dark:text-editorial-cream hover:text-neutral-500 transition-colors inline-flex items-center gap-1.5"
+                  className="min-h-[44px] inline-flex items-center font-serif italic text-base sm:text-lg font-bold text-editorial-charcoal hover:text-neutral-600 transition-colors inline-flex items-center gap-1.5"
                 >
                   jianhilario@gmail.com
                   <ArrowUpRight size={13} className="opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -159,30 +173,30 @@ export default function Contact() {
 
               {/* Link 2 */}
               <div className="group">
-                <span className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 block mb-1 font-bold">
-                  02 // LinkedIn Network
+                <span className="font-mono text-xs uppercase tracking-widest text-neutral-600 block mb-1 font-bold">
+                  LinkedIn
                 </span>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/jian-marie-hilario"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-serif italic text-base sm:text-lg font-bold text-editorial-charcoal dark:text-editorial-cream hover:text-neutral-500 transition-colors inline-flex items-center gap-1.5"
+                  className="min-h-[44px] inline-flex items-center font-serif italic text-base sm:text-lg font-bold text-editorial-charcoal hover:text-neutral-600 transition-colors inline-flex items-center gap-1.5"
                 >
-                  linkedin.com/in/jian-marie
+                  linkedin.com/in/jian-marie-hilario
                   <ArrowUpRight size={13} className="opacity-40 group-hover:opacity-100 transition-opacity" />
                 </a>
               </div>
 
               {/* Link 3 */}
               <div className="group">
-                <span className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 block mb-1 font-bold">
-                  03 // GitHub Repository
+                <span className="font-mono text-xs uppercase tracking-widest text-neutral-600 block mb-1 font-bold">
+                  GitHub
                 </span>
                 <a
                   href="https://github.com/jianhilario"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-serif italic text-base sm:text-lg font-bold text-editorial-charcoal dark:text-editorial-cream hover:text-neutral-500 transition-colors inline-flex items-center gap-1.5"
+                  className="min-h-[44px] inline-flex items-center font-serif italic text-base sm:text-lg font-bold text-editorial-charcoal hover:text-neutral-600 transition-colors inline-flex items-center gap-1.5"
                 >
                   github.com/jianhilario
                   <ArrowUpRight size={13} className="opacity-40 group-hover:opacity-100 transition-opacity" />
@@ -195,8 +209,7 @@ export default function Contact() {
           {/* Right Column - Contact Form Box */}
           <div className="lg:col-span-7">
             
-            {/* BorderGlow card container style */}
-            <div className="p-6 sm:p-10 border border-neutral-200 dark:border-neutral-900 rounded-sm bg-white/60 dark:bg-neutral-950/20 shadow-sm relative">
+            <div className="p-6 sm:p-10 border border-neutral-300 rounded-sm bg-white/60 shadow-sm relative">
               
               <AnimatePresence mode="wait">
                 {!isSubmitted ? (
@@ -205,12 +218,14 @@ export default function Contact() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    ref={formRef}
+                    noValidate
                     onSubmit={handleSubmit}
                     className="space-y-6"
                   >
                     {/* Your Name */}
                     <div className="space-y-2">
-                      <label htmlFor="name" className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold block">
+                      <label htmlFor="name" className="font-mono text-xs uppercase tracking-widest text-neutral-600 font-bold block">
                         Your Name *
                       </label>
                       <input
@@ -220,15 +235,20 @@ export default function Contact() {
                         value={formData.name}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
+                        autoComplete="name"
+                        maxLength={100}
+                        aria-required="true"
+                        aria-invalid={fieldErrors.name ? 'true' : 'false'}
+                        aria-describedby={fieldErrors.name ? 'name-error' : undefined}
                         placeholder="Jane Doe"
-                        className={`min-touch-wide w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 ${
+                        className={`min-touch-wide w-full bg-white border rounded-sm px-4 text-base font-sans focus:outline-none transition-colors duration-200 ${
                           fieldErrors.name
-                            ? 'border-red-500 dark:border-red-500 focus:border-red-500'
-                            : 'border-neutral-200 dark:border-neutral-800 focus:border-editorial-charcoal dark:focus:border-editorial-cream'
+                            ? 'border-red-500 focus:border-red-500'
+                            : 'border-neutral-300 focus:border-editorial-charcoal '
                         }`}
                       />
                       {fieldErrors.name && (
-                        <p className="text-[10px] font-mono text-red-500 font-bold">
+                        <p id="name-error" role="alert" className="text-xs font-mono text-red-500 font-bold">
                           {fieldErrors.name}
                         </p>
                       )}
@@ -236,7 +256,7 @@ export default function Contact() {
 
                     {/* Email */}
                     <div className="space-y-2">
-                      <label htmlFor="email" className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold block">
+                      <label htmlFor="email" className="font-mono text-xs uppercase tracking-widest text-neutral-600 font-bold block">
                         Email *
                       </label>
                       <input
@@ -246,15 +266,20 @@ export default function Contact() {
                         value={formData.email}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
+                        autoComplete="email"
+                        maxLength={254}
+                        aria-required="true"
+                        aria-invalid={fieldErrors.email ? 'true' : 'false'}
+                        aria-describedby={fieldErrors.email ? 'email-error' : undefined}
                         placeholder="jane@example.com"
-                        className={`min-touch-wide w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 ${
+                        className={`min-touch-wide w-full bg-white border rounded-sm px-4 text-base font-sans focus:outline-none transition-colors duration-200 ${
                           fieldErrors.email
-                            ? 'border-red-500 dark:border-red-500 focus:border-red-500'
-                            : 'border-neutral-200 dark:border-neutral-800 focus:border-editorial-charcoal dark:focus:border-editorial-cream'
+                            ? 'border-red-500 focus:border-red-500'
+                            : 'border-neutral-300 focus:border-editorial-charcoal '
                         }`}
                       />
                       {fieldErrors.email && (
-                        <p className="text-[10px] font-mono text-red-500 font-bold">
+                        <p id="email-error" role="alert" className="text-xs font-mono text-red-500 font-bold">
                           {fieldErrors.email}
                         </p>
                       )}
@@ -262,7 +287,7 @@ export default function Contact() {
 
                     {/* Subject */}
                     <div className="space-y-2">
-                      <label htmlFor="subject" className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold block">
+                      <label htmlFor="subject" className="font-mono text-xs uppercase tracking-widest text-neutral-600 font-bold block">
                         Subject
                       </label>
                       <input
@@ -271,14 +296,15 @@ export default function Contact() {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        placeholder="Dashboard design collaboration"
-                        className="min-touch-wide w-full bg-white dark:bg-neutral-950/40 border border-neutral-200 dark:border-neutral-800 rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none focus:border-editorial-charcoal dark:focus:border-editorial-cream transition-colors duration-200"
+                        maxLength={150}
+                        placeholder="QA analyst role at your company"
+                        className="min-touch-wide w-full bg-white border border-neutral-300 rounded-sm px-4 text-base font-sans focus:outline-none focus:border-editorial-charcoal transition-colors duration-200"
                       />
                     </div>
 
                     {/* Message */}
                     <div className="space-y-2">
-                      <label htmlFor="message" className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold block">
+                      <label htmlFor="message" className="font-mono text-xs uppercase tracking-widest text-neutral-600 font-bold block">
                         Message *
                       </label>
                       <textarea
@@ -288,24 +314,38 @@ export default function Contact() {
                         value={formData.message}
                         onChange={handleInputChange}
                         onBlur={handleBlur}
-                        placeholder="Detail your pipeline specifications, workspace integration proposal, or system requirements..."
-                        className={`min-touch-wide w-full bg-white dark:bg-neutral-950/40 border rounded-sm px-4 text-xs sm:text-sm font-sans focus:outline-none transition-colors duration-200 resize-none ${
+                        maxLength={5000}
+                        aria-required="true"
+                        aria-invalid={fieldErrors.message ? 'true' : 'false'}
+                        aria-describedby={fieldErrors.message ? 'message-error' : undefined}
+                        placeholder="Tell me about the role or project you have in mind."
+                        className={`min-touch-wide w-full bg-white border rounded-sm px-4 text-base font-sans focus:outline-none transition-colors duration-200 resize-none ${
                           fieldErrors.message
-                            ? 'border-red-500 dark:border-red-500 focus:border-red-500'
-                            : 'border-neutral-200 dark:border-neutral-800 focus:border-editorial-charcoal dark:focus:border-editorial-cream'
+                            ? 'border-red-500 focus:border-red-500'
+                            : 'border-neutral-300 focus:border-editorial-charcoal '
                         }`}
                       />
                       {fieldErrors.message && (
-                        <p className="text-[10px] font-mono text-red-500 font-bold">
+                        <p id="message-error" role="alert" className="text-xs font-mono text-red-500 font-bold">
                           {fieldErrors.message}
                         </p>
                       )}
                     </div>
 
+                    {/* Honeypot: hidden from people and assistive tech, bots fill it */}
+                    <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                      <label htmlFor="website">Website</label>
+                      <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+                    </div>
+
                     {/* Submit Error Block */}
                     {submitError && (
-                      <div className="p-4 rounded-sm border border-red-500/10 bg-red-500/5 font-mono text-[10px] text-red-500 font-bold leading-relaxed">
-                        Failed to send message. Please try again or email me directly at jianhilario@gmail.com.
+                      <div role="alert" className="p-4 rounded-sm border border-red-500/20 bg-red-500/5 font-mono text-xs text-red-700 font-bold leading-relaxed">
+                        {submitError}{' '}
+                        <a href="mailto:jianhilario@gmail.com" className="min-h-[44px] inline-flex items-center underline underline-offset-2">
+                          Email jianhilario@gmail.com
+                        </a>{' '}
+                        if it keeps failing.
                       </div>
                     )}
 
@@ -313,39 +353,41 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="min-touch-wide w-full px-6 rounded-sm bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal hover:bg-neutral-800 dark:hover:bg-neutral-200 font-mono text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer focus:outline-none disabled:opacity-40"
+                      aria-busy={isSubmitting}
+                      className="min-touch-wide w-full px-6 rounded-sm bg-editorial-charcoal text-editorial-cream hover:bg-neutral-800 font-mono text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer focus:outline-none disabled:opacity-40"
                     >
-                      <span>{isSubmitting ? 'Dispatching...' : 'Send Message'}</span>
-                      <Send size={12} className={isSubmitting ? 'animate-bounce' : ''} />
+                      <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
+                      <Send size={12} />
                     </button>
                   </motion.form>
                 ) : (
                   /* SUCCESS STATE */
                   <motion.div
                     key="success-state"
+                    role="status"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="py-12 text-center space-y-6"
                   >
                     <div className="flex justify-center">
-                      <div className="p-4 rounded-full bg-gradient-to-br from-blue-500/15 to-violet-500/15 border border-indigo-500/30 text-indigo-500 dark:text-indigo-400">
+                      <div className="p-4 rounded-full bg-editorial-panel border border-neutral-400 text-editorial-charcoal ">
                         <CheckCircle size={36} />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <h3 className="font-serif font-bold text-2xl text-editorial-charcoal dark:text-editorial-cream">
-                        Message Dispatched!
+                      <h3 className="font-serif font-bold text-2xl text-editorial-charcoal ">
+                        Message sent
                       </h3>
-                      <p className="font-sans text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 font-light max-w-md mx-auto leading-relaxed">
-                        Thank you for reaching out. Jian Marie has received your query and will reply within 24 business hours.
+                      <p className="font-sans text-sm sm:text-base text-neutral-600 font-normal max-w-md mx-auto leading-relaxed">
+                        Thanks for reaching out. Your message has been sent to Jian Marie.
                       </p>
                     </div>
 
                     <button
                       onClick={() => setIsSubmitted(false)}
-                      className="min-touch-wide inline-flex items-center gap-2 px-6 border border-neutral-200 dark:border-neutral-800 hover:border-editorial-charcoal dark:hover:border-editorial-cream rounded-sm font-mono text-[10px] font-bold uppercase tracking-widest text-editorial-charcoal dark:text-editorial-cream transition-colors duration-300 cursor-pointer focus:outline-none"
+                      className="min-touch-wide inline-flex items-center gap-2 px-6 border border-neutral-300 hover:border-editorial-charcoal rounded-sm font-mono text-xs font-bold uppercase tracking-widest text-editorial-charcoal transition-colors duration-300 cursor-pointer focus:outline-none"
                     >
                       Send Another Message
                     </button>

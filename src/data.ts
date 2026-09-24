@@ -6,9 +6,9 @@ export const projects: Project[] = [
     title: 'S-CORE Portal',
     subtitle: 'Request-and-approval portal for StratComm',
     category: 'Web Development',
-    description: 'S-CORE is a web-based request-and-approval portal for the Strategic Communications Office that centralizes submissions, automates approvals/task assignments, provides real-time messaging, file uploads/previews, and PDF/Excel report generation.',
-    longDescription: 'S-CORE is a fully-featured request-and-approval system designed for the DLSU-D Strategic Communications Office. Centralizes creative and publication submissions, automates approval workflows and task assignments, and provides real-time messaging, file uploads with dynamic previews, and robust PDF/Excel audit reports.',
-    tags: ['Node.js', 'Express', 'MongoDB', 'Socket.IO', 'EJS'],
+    description: 'S-CORE is a web-based request-and-approval portal for the Strategic Communications Office that centralizes submissions, automates approvals/task assignments, provides real-time messaging, file uploads/previews, and PDF/Excel report generation. Includes end-to-end functional and integration testing of RBAC and request routing.',
+    longDescription: 'SCO – Service & Creative Optimization System (Capstone, 2024–2026), designed for the DLSU-D Strategic Communications Office.\n\nFull-Stack System Architecture: Designed and built a secure, role-based task management system with automated service request routing, file handling, and RBAC enforcement.\n\nQA — Functional Testing: Designed and ran a 10-case test plan covering login, role-based access across 3 roles (Admin, Requester, Unit) and request routing, including URL tampering and access to other users\' requests. 9 passed; 1 defect found and logged (BUG-001).\n\nQA — Integration Testing: Verified that submitted requests reach the correct Unit and that status changes made by a Unit are visible to the Requester.\n\nReal-Time Features: Integrated Socket.IO for live status updates and automated Excel/PDF report generation, streamlining administrative workflows.',
+    tags: ['Node.js', 'Express', 'MongoDB', 'Socket.IO', 'TypeScript', 'Vite', 'Functional Testing'],
     links: {
       live: 'https://dlsuds-core.me'
     },
@@ -62,7 +62,7 @@ export const projects: Project[] = [
     subtitle: 'Cross-platform care link application',
     category: 'Web Development',
     description: 'Cross-platform Flutter app that securely links caregivers and elders. Features medication management, adherence tracking, mood & health logs, and real-time emergency/missed-dose alerts — powered by Firebase for real-time sync and secure Firestore rules.',
-    longDescription: 'A dynamic cross-platform Flutter mobile application designed to securely connect caregivers and senior family members. Features medication trackers, health logging, and instant notification alerts, backed by robust Firebase authorization rules.',
+    longDescription: 'A dynamic cross-platform Flutter mobile application designed to securely connect caregivers and senior family members. Features medication trackers, health logging, and instant notification alerts, backed by robust Firebase authorization rules.\n\nRole-Based Testing: Verified correct data routing and UI rendering for both user roles (Elder, Caregiver) through manual functional testing — confirming role-specific views displayed correct data and authentication redirects behaved as expected.',
     tags: ['Flutter', 'Firebase', 'Dart'],
     links: {
       github: 'https://github.com/carebear1919/caresync_mobileapplication'
@@ -467,9 +467,10 @@ export const experienceTimeline: Experience[] = [
     location: 'Manila, PH',
     period: 'Jan 2026 – Apr 2026',
     description: [
-      'Engineered React ledgers and Apache Superset dashboards for corporate Treasury operations, reducing workflow steps.',
-      'Mapped and documented a 19-step pricing process, designing 2 core visualization dashboards.',
-      'Authored comprehensive CSS customization guides and developer manuals to sustain platform updates.'
+      'BI Engineering & Automation: Developed enterprise-level Pricing & Market Dashboards on Apache Superset, automating manual Excel workflows and reducing reporting preparation time by 40% for the Treasury department.',
+      'Functional & Data Validation Testing: Executed data validation testing across 4-week Scrum sprints — verifying dashboard outputs against source pipeline data before each production deployment. Authored Technical SOPs documenting test procedures and acceptance criteria, maintaining zero data integrity issues across all production releases.',
+      'Defect Identification & Reporting: Conducted systematic defect identification across dashboard features and data pipelines — comparing expected vs. actual values, logging discrepancies with reproduction steps, severity assessment, and resolution documentation. Communicated structured test findings directly to Treasury stakeholders through written progress updates.',
+      'UI/UX & Frontend Optimization: Authored a custom CSS framework adopted at 100% by internal stakeholders, establishing new enterprise design standards for dashboard layouts and responsive typography.'
     ],
     tag: 'Industry'
   },
@@ -515,123 +516,37 @@ export const experienceTimeline: Experience[] = [
 
 export const services: Service[] = [
   {
-    id: 'web-design-dev',
-    number: '01',
-    title: 'Web Design & Development',
-    positioning: 'Pixel-perfect, responsive websites built in React — designed in Figma first, engineered to last.',
-    description: 'From landing pages to multi-page company sites, I design and build responsive websites that look intentional and perform reliably. Every project starts in Figma — layouts, components, and user flows mapped before a single line of code is written. The result is a site that doesn\'t just look good in a browser preview — it works on every screen, loads fast, and holds up under real use.',
-    includes: [
-      'Landing pages & company profile sites',
-      'Portfolio & personal brand websites',
-      'E-commerce storefronts & product catalogs',
-      'Multi-page responsive websites',
-      'GitHub Pages & Vercel deployment'
-    ],
-    tools: ['React', 'TypeScript', 'Node.js', 'HTML5', 'CSS3', 'JavaScript', 'Figma', 'Tailwind CSS', 'Vite']
+    id: 'qa-testing',
+    title: 'Software testing and QA',
+    description: 'Test cases, functional and role-based access testing, and clear defect reports.',
+    actionLabel: 'S-CORE test report',
+    scrollTo: 'qa',
   },
   {
-    id: 'ui-ux-design-prototyping',
-    number: '02',
-    title: 'UI/UX Design & Prototyping',
-    positioning: 'From blank canvas to clickable prototype — interfaces designed around how real users actually think.',
-    description: 'Good design isn\'t decoration — it\'s clarity. I design interfaces that reduce friction, guide users naturally, and communicate hierarchy without needing instructions. My process starts with understanding the user and the problem before touching any design tool. Wireframes come first, high-fidelity mockups second, and every decision has a reason behind it.',
-    includes: [
-      'User flow mapping & wireframing',
-      'High-fidelity UI design in Figma',
-      'Clickable interactive prototypes',
-      'Component-based design systems',
-      'Design handoff documentation for developers'
-    ],
-    tools: ['Figma', 'Adobe XD', 'Adobe Illustrator', 'Photoshop']
+    id: 'web-development',
+    title: 'Full-stack web development',
+    description: 'React, Node.js and MongoDB applications, from dashboards to request-and-approval systems.',
+    actionLabel: 'Web projects',
+    filter: 'Web Development',
   },
   {
-    id: 'dashboard-data-vis',
-    number: '03',
-    title: 'Dashboard & Data Visualization',
-    positioning: 'Raw data turned into decision-ready dashboards — built for clarity, secured for the right eyes only.',
-    description: 'Most people can pull data. Not everyone can present it in a way that actually drives decisions. I design and build dashboards that surface what matters — clean data hierarchy, intuitive filters, and role-based access so the right people see the right information. My experience building production-grade pricing dashboards deployed across enterprise treasury operations means I\'ve done this at a corporate level, not just in a classroom.',
-    includes: [
-      'BI dashboard design and development',
-      'Interactive data visualization (charts, tables, KPI cards)',
-      'Role-based access control (RBAC) setup',
-      'Automated data pipeline integration',
-      'Apache Superset configuration and CSS customization'
-    ],
-    tools: ['Apache Superset', 'Custom CSS', 'Recharts', 'D3.js', 'Excel', 'Firebase']
+    id: 'ui-ux',
+    title: 'UI/UX design and prototyping',
+    description: 'Wireframes and clickable Figma prototypes built around how people use the product.',
+    actionLabel: 'UI/UX projects',
+    filter: 'UI/UX',
   },
   {
-    id: 'mobile-app-dev',
-    number: '04',
-    title: 'Mobile App Development',
-    positioning: 'One codebase. Two platforms. Zero compromise on the user experience.',
-    description: 'I build cross-platform mobile applications using Flutter — which means your app runs on both iOS and Android from a single codebase without sacrificing performance or feel. I handle the full mobile development cycle: authentication, real-time data, role-based navigation, and UI that actually fits how people use their phones. If your users need it on the go, I can build it.',
-    includes: [
-      'Cross-platform mobile apps (iOS & Android)',
-      'Firebase authentication & real-time database integration',
-      'Role-based user routing & navigation',
-      'Custom UI components tailored to mobile UX patterns',
-      'App deployment preparation'
-    ],
-    tools: ['Flutter', 'Dart', 'Firebase Auth', 'Firestore', 'StreamBuilder']
+    id: 'graphic-design',
+    title: 'Graphic design and brand materials',
+    description: 'Posters, publications and social graphics for student organizations, delivered for print and web.',
+    actionLabel: 'Design projects',
+    filter: 'Branding & Visuals',
   },
-  {
-    id: 'ecommerce-dev',
-    number: '05',
-    title: 'E-Commerce Development',
-    positioning: 'Online stores that don\'t just display products — they convert browsers into buyers.',
-    description: 'An e-commerce site lives or dies by its user flow. I build storefronts where the path from product discovery to order confirmation is frictionless — clear product layouts, intuitive cart behavior, smooth checkout, and a confirmation experience that makes the customer feel good about what they just did. From simple product catalogs to order management with receipt generation, I cover the full buying journey.',
-    includes: [
-      'Product catalog with category filtering',
-      'Shopping cart with quantity management',
-      'Order form with itemized receipt generation',
-      'Checkout confirmation & success UX',
-      'Deployment on Vercel or GitHub Pages'
-    ],
-    tools: ['React', 'TypeScript', 'JavaScript', 'CSS3', 'HTML5', 'Vercel', 'GitHub Pages']
-  },
-  {
-    id: 'graphic-design-materials',
-    number: '06',
-    title: 'Graphic Design & Brand Materials',
-    positioning: 'High-impact visuals that communicate before anyone reads a single word.',
-    description: 'I\'ve been designing publication materials, event posters, digital advocacy assets, and organizational graphics for student bodies and university councils since 2022. Three years of real briefs, real deadlines, and real audiences. Whether it\'s a social media campaign, an event poster, or a digital infographic that needs to communicate a complex idea simply — I understand how visual hierarchy, color, and typography work together to make people stop scrolling.',
-    includes: [
-      'Event posters & promotional materials (pubmats)',
-      'Social media graphics & campaign assets',
-      'Digital infographics & data storytelling visuals',
-      'Organizational publication materials',
-      'Print-ready and web-optimized file formats'
-    ],
-    tools: ['Adobe Photoshop', 'Adobe Illustrator', 'Adobe Animate', 'Canva', 'Figma']
-  },
-  {
-    id: 'logo-identity-design',
-    number: '07',
-    title: 'Logo & Visual Identity Design',
-    positioning: 'A logo is a first impression that never gets a second chance — let\'s make it count.',
-    description: 'Visual identity is more than a logo — it\'s the system that makes a brand recognizable across every touchpoint. I design logos grounded in the brand\'s personality and purpose, then extend that into a coherent identity: color palette, typography pairing, and basic brand guidelines your team can actually use. Every concept is delivered with the rationale behind it, so you understand why it works — not just that it does.',
-    includes: [
-      'Logo concept development & refinement',
-      'Color palette & typography definition',
-      'Basic brand guidelines document',
-      'Multiple file format delivery (SVG, PNG, PDF)',
-      'Light & dark variant versions'
-    ],
-    tools: ['Adobe Illustrator', 'Figma', 'Photoshop']
-  },
-  {
-    id: 'process-doc-writing',
-    number: '08',
-    title: 'Process Documentation & Technical Writing',
-    positioning: 'Clear documentation that lets teams build, hand off, and scale — without losing what they built.',
-    description: 'The work doesn\'t end when the product ships. Someone has to onboard the next developer, train the next user, and make sure the system survives a team change. I write documentation that\'s actually useful — structured, clear, and written for the person who comes after you. From developer guides and CSS customization references to process flow diagrams and project playbooks, I translate complex technical systems into language that people can act on.',
-    includes: [
-      'Technical developer guides & references',
-      'Standard Operating Procedures (SOPs)',
-      'End-to-end process flow diagrams (Draw.io)',
-      'Project playbooks & handover documentation',
-      'Stakeholder training materials'
-    ],
-    tools: ['Draw.io', 'MS Word', 'Notion', 'Apache Superset', 'MS Planner']
-  }
 ];
+
+// Numbers shown in the About strip and About section are derived, not typed by hand
+export const siteStats = {
+  projectsShipped: projects.filter((p) => p.links.live || p.links.github || p.pdfUrl).length,
+  yearsBuilding: new Date().getFullYear() - 2022, // first design/build work: 2022
+};

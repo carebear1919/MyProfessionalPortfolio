@@ -2,83 +2,50 @@ interface FooterProps {
   scrollToSection: (id: string) => void;
 }
 
+const links = [
+  { label: 'Home', id: 'home' },
+  { label: 'Work', id: 'projects' },
+  { label: 'Quality', id: 'qa' },
+  { label: 'About', id: 'about' },
+  { label: 'Services', id: 'services' },
+  { label: 'Contact', id: 'contact' },
+];
+
 export default function Footer({ scrollToSection }: FooterProps) {
   return (
-    <footer className="relative py-16 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
-      {/* Vertical margin rules */}
-      <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-neutral-300 dark:bg-neutral-700/80 pointer-events-none z-0" />
-      {/* Corner brackets */}
-      <div className="absolute top-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute top-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-t-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute bottom-0 left-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-l-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="absolute bottom-0 right-0 w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 border-r-[1px] border-b-[1px] border-neutral-300 dark:border-neutral-700/80 pointer-events-none z-0" />
-      <div className="max-w-7xl mx-auto space-y-12">
-        
-        {/* Alignment style: Left panel + Right panel */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
-          
-          {/* Left Panel */}
-          <div className="md:col-span-6 space-y-3">
-            <h3 className="font-serif font-bold text-lg sm:text-xl text-editorial-charcoal dark:text-editorial-cream uppercase tracking-tight">
-              JIAN MARIE // DESIGNER
-            </h3>
-            <p className="font-sans text-xs sm:text-[13px] text-neutral-500 dark:text-neutral-400 font-light max-w-sm leading-relaxed">
-              Crafting high-precision responsive layouts and automated workflows.
-            </p>
-          </div>
-
-          {/* Right Panel */}
-          <div className="md:col-span-6 space-y-4 md:text-right">
-            <h4 className="font-mono text-[10.5px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold">
-              NAVIGATION INDEX
-            </h4>
-            <div className="flex flex-col md:items-end gap-2.5 font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
-              <button
-                onClick={() => scrollToSection('home')}
-                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
-              >
-                01 // HOME
-              </button>
-              <button
-                onClick={() => scrollToSection('projects')}
-                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
-              >
-                02 // SHIPPED SYSTEMS
-              </button>
-              <button
-                onClick={() => scrollToSection('about')}
-                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
-              >
-                03 // ABOUT MECHANICS
-              </button>
-              <button
-                onClick={() => scrollToSection('services')}
-                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
-              >
-                04 // SERVICE MATRIX
-              </button>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="min-touch-wide py-2 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors text-left md:text-right cursor-pointer focus:outline-none font-bold"
-              >
-                05 // INITIALIZE CONNECTION
-              </button>
-            </div>
-          </div>
-
+    <footer className="py-14 px-6 sm:px-10 lg:px-16 border-t border-neutral-300 bg-editorial-cream text-left">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+        <div className="md:col-span-6 space-y-2">
+          <p className="font-serif font-semibold text-2xl text-editorial-charcoal">Jian Marie Hilario</p>
+          <p className="text-base text-neutral-600 max-w-sm leading-relaxed">
+            Full-stack developer, quality analyst and UI/UX designer based in Cavite, Philippines.
+          </p>
         </div>
 
-        {/* Bottom row */}
-        <div className="border-t border-neutral-200 dark:border-neutral-900 pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-[11px] text-neutral-500 dark:text-neutral-400 font-medium">
-          <div>
-            &copy; 2026 Jian Marie &bull; All Cores Reserved.
-          </div>
-          <div>
-            DOST Merit Scholar Portfolio &bull; Built with React &amp; Tailwind CSS
-          </div>
-        </div>
+        <nav aria-label="Footer" className="md:col-span-6 md:justify-self-end">
+          <ul className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-xs font-bold uppercase tracking-wider text-neutral-600">
+            {links.map((link) => (
+              <li key={link.id}>
+                <button
+                  onClick={() => scrollToSection(link.id)}
+                  className="min-h-[44px] min-w-[44px] hover:text-editorial-charcoal transition-colors cursor-pointer"
+                >
+                  {link.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
+        <div className="md:col-span-12 pt-6 border-t border-neutral-300 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 font-mono text-xs text-neutral-600">
+          <p>&copy; 2026 Jian Marie Hilario. Built with React and Tailwind CSS.</p>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('toggleTestMode', { detail: true }))}
+            className="min-h-[44px] font-bold uppercase tracking-wider underline underline-offset-4 hover:text-editorial-charcoal cursor-pointer"
+          >
+            Test this page
+          </button>
+        </div>
       </div>
     </footer>
   );

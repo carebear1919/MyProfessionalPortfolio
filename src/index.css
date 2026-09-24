@@ -1,53 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@200;300;400;500;600&display=swap');
-
 @import "tailwindcss";
-
-@variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   /* Custom palette matching a premium editorial look */
-  --color-editorial-cream: #faf9f6; /* Warm plaster paper tone */
-  --color-editorial-charcoal: #1e1e1d; /* Softer, warm low-saturation charcoal */
-  --color-editorial-muted-dark: #666661;
-  --color-editorial-muted-light: #b5b5b0;
-  
-  --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-fade-in: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  --animate-marquee: marquee 30s linear infinite;
-  
-  @keyframes fade-up {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  --color-editorial-cream: #efeae2; /* Warm sunlit-plaster tone */
+  --color-editorial-charcoal: #161411; /* Warm near-black */
+  --color-editorial-panel: #ddd5c8; /* Slightly deeper plaster for alternating bands */
+  --color-editorial-band: #12100e; /* Black showcase band */
+  --color-editorial-accent: #a8876a; /* Warm tan for fills, rules and strokes */
+  --color-editorial-accent-text: #6f563e; /* Darker tan for text: 5.6:1 on plaster, 4.6:1 on the deeper panel */
 
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-
+  /* Warm the neutral scale so every gray in the site leans stone */
+  --color-neutral-50: var(--color-stone-50);
+  --color-neutral-100: var(--color-stone-100);
+  --color-neutral-200: var(--color-stone-200);
+  --color-neutral-300: var(--color-stone-300);
+  --color-neutral-400: var(--color-stone-400);
+  --color-neutral-500: var(--color-stone-500);
+  --color-neutral-600: var(--color-stone-600);
+  --color-neutral-700: var(--color-stone-700);
+  --color-neutral-800: var(--color-stone-800);
+  --color-neutral-900: var(--color-stone-900);
+  --color-neutral-950: var(--color-stone-950);
 }
 
 /* Custom base styles for the editorial feel */
@@ -55,12 +32,43 @@ html, body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   scroll-behavior: smooth;
-  transition: background-color 0.5s ease, color 0.5s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Anchored sections stop below the fixed top bar */
+section[id], #home {
+  scroll-margin-top: 4rem;
+}
+
+/* Type rendering: balanced headings, no orphans in prose */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+input, textarea, select {
+  font-size: 16px; /* prevents iOS focus zoom */
+}
+
+/* Touch devices and narrow screens: standalone buttons meet the 44px target (inline text buttons excluded) */
+@media (pointer: coarse), (max-width: 1023px) {
+  button:not(p button):not(li button):not(.no-tap) {
+    min-height: 44px;
+  }
+}
+
+/* Keyboard focus is always visible (beats per-component focus:outline-none) */
+:focus-visible {
+  outline: 2px solid var(--color-editorial-charcoal);
+  outline-offset: 3px;
+}
+.focus-dark :focus-visible {
+  outline-color: var(--color-editorial-cream);
+}
+
 /* Responsive media — prevent overflow on all viewports */
-img, video, canvas, svg, iframe {
+img, video, canvas, svg {
   max-width: 100%;
   height: auto;
 }
@@ -100,44 +108,36 @@ img, video, canvas, svg, iframe {
   background: transparent;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #333333;
-  border-radius: 3px;
-}
-
 ::-webkit-scrollbar-thumb {
   background: #e4e4e0;
   border-radius: 3px;
 }
 
-/* Custom glass effect variables */
-.glass-panel {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Tools ticker: one row per category, paused off screen, on hover/focus, or by the visible Pause control */
+@keyframes tools-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
-
-/* Layout lines representing typical editorial print layouts */
-.editorial-grid-line {
-  position: relative;
+.tools-track {
+  animation: tools-marquee var(--tools-duration, 30s) linear infinite;
+  will-change: transform;
 }
-
-.editorial-grid-line::after {
-  content: '';
-  position: absolute;
-  background-color: currentColor;
-  opacity: 0.08;
+.tools-track[data-reverse="true"] {
+  animation-direction: reverse;
 }
-
-.editorial-grid-line-h::after {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
+.tools-band[data-running="false"] .tools-track,
+.tools-row:hover .tools-track,
+.tools-row:focus-within .tools-track {
+  animation-play-state: paused;
 }
-
-.editorial-grid-line-v::after {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 1px;
+.tools-mask {
+  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+/* Reduced motion: no ticker, the list simply wraps */
+@media (prefers-reduced-motion: reduce) {
+  .tools-track { animation: none; width: auto; }
+  .tools-list { flex-wrap: wrap; row-gap: 0.75rem; }
+  .tools-dup { display: none; }
+  .tools-mask { mask-image: none; -webkit-mask-image: none; overflow: visible; }
 }

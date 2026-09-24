@@ -7,10 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
-app.use(express.json());
+app.use(express.json({ limit: '20kb' }));
 
 app.post('/api/contact', async (req, res) => {
   try {
+    if (req.body && typeof req.body.website === 'string' && req.body.website.trim() !== '') {
+      return res.json({ success: true, sent: true });
+    }
+
     const errors = validateContactBody(req.body);
     if (errors.length > 0) {
       return res.status(400).json({ success: false, errors });

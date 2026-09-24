@@ -1,69 +1,72 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { projects } from '../data';
 
 interface SelectedWorkProps {
   scrollToSection: (id: string) => void;
 }
 
-export default function SelectedWork({ scrollToSection }: SelectedWorkProps) {
-  const preview = projects.filter((p) => p.featured && p.images && p.images.length > 0).slice(0, 4);
+// One flagship per discipline: full-stack/QA, full-stack PWA, UI/UX
+const FEATURED_IDS = ['s-core-portal', 'renta', 'sample-company'];
 
-  const handleOpen = (category: string) => {
-    window.dispatchEvent(new CustomEvent('filterProjects', { detail: category }));
-    scrollToSection('projects');
+export default function SelectedWork({ scrollToSection }: SelectedWorkProps) {
+  const preview = FEATURED_IDS
+    .map((id) => projects.find((p) => p.id === id))
+    .filter((p): p is NonNullable<typeof p> => !!p && !!p.images && p.images.length > 0);
+
+  // Open the project's detail panel in the Projects section
+  const handleOpen = (id: string) => {
+    window.dispatchEvent(new CustomEvent('openProject', { detail: id }));
   };
 
   return (
-    <section className="py-16 px-6 sm:px-10 lg:px-16 border-t border-neutral-200 dark:border-neutral-900 bg-editorial-cream dark:bg-editorial-charcoal transition-colors duration-500 text-left">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="font-mono text-[10px] tracking-[0.4em] text-neutral-500 dark:text-neutral-400 uppercase block mb-1.5">
-              Selected Work
-            </span>
-            <h2 className="font-serif font-bold tracking-tight text-2xl sm:text-3xl text-editorial-charcoal dark:text-editorial-cream">
-              Crafted with purpose.
-            </h2>
-          </div>
-          <button
-            onClick={() => scrollToSection('projects')}
-            className="font-mono text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-colors duration-300 flex items-center gap-1.5 cursor-pointer focus:outline-none"
-          >
-            View All Projects <ArrowUpRight size={13} />
-          </button>
-        </div>
+    <section className="focus-dark bg-editorial-band text-editorial-cream text-left">
+      <div className="px-6 sm:px-10 lg:px-16">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12">
+      <div className="lg:col-span-3 lg:pr-10 py-14 lg:py-20 flex flex-col justify-center">
+        <h2 className="font-serif font-medium text-[clamp(1.7rem,2.6vw,2.6rem)] leading-tight">
+          Selected projects across development, testing and design.
+        </h2>
+        <button
+          onClick={() => scrollToSection('projects')}
+          className="group mt-9 inline-flex items-center gap-4 font-mono text-xs font-bold uppercase tracking-[0.25em] cursor-pointer focus:outline-none w-fit"
+        >
+          View all projects
+          <span className="w-9 h-9 rounded-full border border-neutral-600 flex items-center justify-center group-hover:bg-editorial-cream group-hover:text-editorial-charcoal transition-all duration-300">
+            <ArrowRight size={13} />
+          </span>
+        </button>
+      </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {preview.map((project) => (
-            <button
-              key={project.id}
-              onClick={() => handleOpen(project.category)}
-              className="group text-left rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/60 dark:bg-neutral-950/20 overflow-hidden hover:border-neutral-400 dark:hover:border-neutral-600 transition-all duration-300 cursor-pointer focus:outline-none"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-                <img
-                  src={project.images![0]}
-                  alt={project.title}
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="absolute top-2 right-2 p-1.5 rounded-full bg-editorial-charcoal/90 text-editorial-cream dark:bg-editorial-cream/90 dark:text-editorial-charcoal opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <ArrowUpRight size={12} />
-                </span>
-              </div>
-              <div className="p-3">
-                <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 block mb-0.5">
-                  {project.category}
-                </span>
-                <span className="font-serif font-bold text-[13px] text-editorial-charcoal dark:text-editorial-cream leading-tight block truncate">
-                  {project.title}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
+      <div className="lg:col-span-9 lg:border-l border-neutral-800 lg:pl-10 pb-14 lg:py-20 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {preview.map((project, idx) => (
+          <button
+            key={project.id}
+            onClick={() => handleOpen(project.id)}
+            className="group text-left cursor-pointer focus:outline-none"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden bg-neutral-900">
+              <img
+                src={project.images![0]}
+                alt={project.title}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                style={{ height: '100%', maxWidth: 'none' }}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+              />
+            </div>
+            <span className="block mt-4 font-serif italic text-sm text-neutral-400">
+              0{idx + 1}
+            </span>
+            <span className="block mt-1 font-mono text-xs font-bold uppercase tracking-[0.2em] text-editorial-cream">
+              {project.title}
+            </span>
+            <span className="block mt-1 font-sans text-sm font-normal text-neutral-300">
+              {project.subtitle}
+            </span>
+          </button>
+        ))}
+      </div>
+      </div>
       </div>
     </section>
   );

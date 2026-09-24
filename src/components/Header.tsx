@@ -1,359 +1,229 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sun, Moon, Github, Linkedin, ArrowUp, Mail, Figma, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Github, Linkedin, ArrowUp, Mail, Palette, Menu, X, FileText } from 'lucide-react';
 
 interface HeaderProps {
-  theme: 'dark' | 'light';
-  toggleTheme: () => void;
   scrollToSection: (id: string) => void;
   activeSection: string;
-  isCollapsed: boolean;
-  onToggleCollapse: () => void;
+  onOpenResume: () => void;
 }
 
-export default function Header({ theme, toggleTheme, scrollToSection, activeSection, isCollapsed, onToggleCollapse }: HeaderProps) {
+const NAV_LINKS = [
+  { label: 'Work', id: 'projects' },
+  { label: 'Quality', id: 'qa' },
+  { label: 'About', id: 'about' },
+  { label: 'Services', id: 'services' },
+  { label: 'Contact', id: 'contact' },
+];
+
+const SOCIALS = [
+  { label: 'GitHub', href: 'https://github.com/jianhilario', icon: Github, external: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jian-marie-hilario', icon: Linkedin, external: true },
+  { label: 'Email', href: 'mailto:jianhilario@gmail.com', icon: Mail, external: false },
+  { label: 'Creative portfolio', href: 'https://canva.link/f6xn3atopprl6rq', icon: Palette, external: true },
+];
+
+export default function Header({ scrollToSection, activeSection, onOpenResume }: HeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
-  // Monitor scroll for Back to Top button
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 400) {
-        setShowBackToTop(true);
-      } else {
-        setShowBackToTop(false);
-      }
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      setShowBackToTop(window.scrollY > 600);
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navItems = [
-    { label: 'Home', id: 'home' },
-    { label: 'Projects', id: 'projects' },
-    { label: 'About', id: 'about' },
-    { label: 'Services', id: 'services' },
-    { label: 'Contact', id: 'contact' }
-  ];
+  // Menu: close on Escape, on outside click, and when the layout grows past the phone breakpoint
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    const onPointer = (e: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onPointer);
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onPointer);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menuOpen]);
 
-  const handleNavClick = (id: string) => {
-    if (id === 'home') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      scrollToSection(id);
-    }
+  const go = (id: string) => {
+    setMenuOpen(false);
+    scrollToSection(id);
   };
 
   return (
     <>
-      {/* Keyboard Accessibility: Skip to Content */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] px-4 py-2 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal font-mono text-xs uppercase tracking-wider rounded border border-neutral-200 dark:border-neutral-800 focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 z-[100] px-4 py-2 bg-editorial-charcoal text-editorial-cream font-mono text-xs uppercase tracking-wider"
       >
         Skip to content
       </a>
 
-      {/* 1. DESKTOP LEFT NAVBAR */}
-      <aside className={`hidden lg:flex flex-col fixed left-0 top-0 h-screen border-r border-neutral-200 dark:border-neutral-900 bg-editorial-cream/95 dark:bg-editorial-charcoal/95 py-12 justify-between z-50 transition-all duration-500 ${isCollapsed ? 'w-20 px-3 items-center' : 'w-64 px-8'}`}>
-        
-        {/* Brand / Logo */}
-        <div className={`space-y-6 w-full ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
+      <header
+        ref={headerRef}
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        className={`fixed top-0 inset-x-0 z-40 bg-editorial-cream border-b transition-colors duration-200 ${
+          scrolled || menuOpen ? 'border-neutral-300' : 'border-transparent'
+        }`}
+      >
+      <div className="px-6 sm:px-10 lg:px-16">
+        <div className="max-w-[1440px] mx-auto h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-4">
           <button
-            onClick={() => handleNavClick('home')}
-            className={`group flex items-center gap-3 focus:outline-none cursor-pointer text-left ${isCollapsed ? 'justify-center' : ''}`}
-            aria-label="Jian Marie Home"
+            onClick={() => go('home')}
+            className="col-start-1 justify-self-start min-h-[44px] flex items-center gap-2 cursor-pointer"
+            aria-label="Jian Marie, back to top"
           >
-            <span className="font-serif font-black text-2xl tracking-tighter text-editorial-charcoal dark:text-editorial-cream">
-              JM
+            <span className="font-serif font-semibold text-2xl leading-none tracking-tight text-editorial-charcoal">
+              Jian Marie
             </span>
-            {!isCollapsed && (
-              <span className="font-mono text-[10.5px] px-2 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 font-bold">
-                PORTFOLIO
-              </span>
-            )}
           </button>
-          
-          {!isCollapsed && (
-            <div className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 uppercase tracking-wider leading-relaxed">
-              Vol. 04 &bull; Active Core<br />
-              DOST Merit Scholar
-            </div>
-          )}
-        </div>
 
-        {/* Navigation List */}
-        <nav className={`flex flex-col space-y-6 text-left w-full ${isCollapsed ? 'items-center' : ''}`}>
-          {navItems.map((item, idx) => {
-            const isActive = activeSection === item.id;
-            const formattedIndex = String(idx + 1).padStart(2, '0');
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`group relative flex items-baseline gap-3 transition-all duration-300 focus:outline-none cursor-pointer text-left ${
-                  isCollapsed ? 'justify-center w-full py-1' : ''
-                } ${
-                  isActive
-                    ? 'text-editorial-charcoal dark:text-editorial-cream font-bold'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream'
-                }`}
-              >
-                <span className={`font-mono tracking-tight opacity-50 group-hover:opacity-100 ${isCollapsed ? 'text-sm font-bold opacity-75' : 'text-[10.5px]'}`}>
-                  {formattedIndex}
-                </span>
-                {!isCollapsed && (
-                  <span className="font-sans text-[13px] uppercase tracking-tighter border-b border-transparent group-hover:border-current pb-0.5">
-                    {item.label}
-                  </span>
-                )}
+          <nav aria-label="Primary" className="hidden md:block col-start-2">
+            <ul className="flex items-center gap-1">
+              {NAV_LINKS.map((link) => {
+                const active = activeSection === link.id;
+                return (
+                  <li key={link.id}>
+                    <button
+                      onClick={() => go(link.id)}
+                      aria-current={active ? 'location' : undefined}
+                      className={`relative min-h-[44px] px-3.5 text-sm font-medium transition-colors cursor-pointer ${
+                        active ? 'text-editorial-charcoal' : 'text-neutral-600 hover:text-editorial-charcoal'
+                      }`}
+                    >
+                      {link.label}
+                      {active && (
+                        <motion.span
+                          layoutId="nav-underline"
+                          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                          className="absolute inset-x-3.5 bottom-1.5 h-0.5 bg-editorial-accent"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-                {/* Collapsed Tooltip */}
-                {isCollapsed && (
-                  <div className="absolute left-full ml-4 px-2.5 py-1.5 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 z-50 whitespace-nowrap">
-                    {item.label}
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Footer & Socials */}
-        <div className="space-y-6 w-full">
-          {!isCollapsed ? (
-            /* EXPANDED BOTTOM BLOCK */
-            <div className="flex flex-col border-t border-neutral-200 dark:border-neutral-900 pt-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[11px] text-neutral-500 dark:text-neutral-400 uppercase tracking-widest font-bold">
-                  Visual Palette
-                </span>
-                <button
-                  onClick={toggleTheme}
-                  className="min-touch rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 cursor-pointer focus:outline-none"
-                  aria-label="Toggle theme"
-                >
-                  <div className="w-4 h-4 flex items-center justify-center">
-                    {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                  </div>
-                </button>
-              </div>
-
-              {/* Social links grid immediately below Visual Palette */}
-              <div className="space-y-2 pt-2 border-t border-dashed border-neutral-200 dark:border-neutral-900/65">
-                <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-widest block font-bold">
-                  Social Correspondence
-                </span>
-                <div className="grid grid-cols-4 gap-1.5">
-                  <a
-                    href="https://github.com/jianhilario"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    referrerPolicy="no-referrer"
-                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                    aria-label="GitHub profile"
-                    title="GitHub"
-                  >
-                    <Github size={13} />
-                  </a>
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    referrerPolicy="no-referrer"
-                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                    aria-label="LinkedIn profile"
-                    title="LinkedIn"
-                  >
-                    <Linkedin size={13} />
-                  </a>
-                  <a
-                    href="mailto:jianhilario@gmail.com"
-                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                    aria-label="Email Address"
-                    title="Email"
-                  >
-                    <Mail size={13} />
-                  </a>
-                  <a
-                    href="https://www.figma.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    referrerPolicy="no-referrer"
-                    className="min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                    aria-label="Figma profile"
-                    title="Figma"
-                  >
-                    <Figma size={13} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* COLLAPSED BOTTOM BLOCK */
-            <div className="flex flex-col items-center border-t border-neutral-200 dark:border-neutral-900 pt-6 w-full space-y-4">
-              <button
-                onClick={toggleTheme}
-                className="min-touch rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 cursor-pointer focus:outline-none"
-                aria-label="Toggle theme"
-                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                <div className="w-4 h-4 flex items-center justify-center">
-                  {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                </div>
-              </button>
-
-              <div className="flex flex-col gap-2 w-full items-center pt-2 border-t border-dashed border-neutral-200 dark:border-neutral-900/65">
-                <a
-                  href="https://github.com/jianhilario"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  referrerPolicy="no-referrer"
-                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                  aria-label="GitHub profile"
-                >
-                  <Github size={13} />
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                    GitHub
-                  </div>
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  referrerPolicy="no-referrer"
-                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                  aria-label="LinkedIn profile"
-                >
-                  <Linkedin size={13} />
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                    LinkedIn
-                  </div>
-                </a>
-                <a
-                  href="mailto:jianhilario@gmail.com"
-                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                  aria-label="Email Address"
-                >
-                  <Mail size={13} />
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                    Email
-                  </div>
-                </a>
-                <a
-                  href="https://www.figma.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  referrerPolicy="no-referrer"
-                  className="group relative flex items-center justify-center min-touch rounded-sm border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/20 text-neutral-550 dark:text-neutral-400 hover:text-editorial-charcoal hover:border-neutral-500 dark:hover:text-editorial-cream dark:hover:border-neutral-600 transition-all duration-300"
-                  aria-label="Figma Profile"
-                >
-                  <Figma size={13} />
-                  <div className="absolute left-full ml-4 px-2 py-1 bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal text-[10px] font-mono uppercase tracking-wider rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 z-50 whitespace-nowrap">
-                    Figma
-                  </div>
-                </a>
-              </div>
-            </div>
-          )}
-
-          {/* Sidebar Expand/Collapse Controller Button */}
-          <div className="pt-2 w-full border-t border-neutral-200 dark:border-neutral-900/60">
+          <div className="col-start-3 justify-self-end flex items-center gap-2">
             <button
-              onClick={onToggleCollapse}
-              className={`w-full flex items-center rounded-sm border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-950 text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream transition-all duration-200 cursor-pointer focus:outline-none ${
-                isCollapsed ? 'p-2 justify-center' : 'px-3 py-2 justify-between text-[11px] font-mono uppercase tracking-wider'
-              }`}
-              title={isCollapsed ? 'Expand Menu' : 'Collapse Menu'}
-              aria-label={isCollapsed ? 'Expand Menu' : 'Collapse Menu'}
+              onClick={onOpenResume}
+              className="hidden md:inline-flex items-center gap-2 min-h-[44px] px-5 bg-editorial-charcoal text-editorial-cream font-mono text-xs font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors cursor-pointer"
             >
-              {!isCollapsed && <span>Collapse Menu</span>}
-              {isCollapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
+              <FileText size={14} aria-hidden="true" />
+              Resume
+            </button>
+
+            <button
+              ref={toggleRef}
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="md:hidden w-11 h-11 -mr-2 flex items-center justify-center text-editorial-charcoal cursor-pointer"
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
-      </aside>
-
-      {/* 2. MOBILE TOP HEADER (Sticky, hidden on desktop) */}
-      <header className="lg:hidden sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-900 bg-editorial-cream/90 dark:bg-editorial-charcoal/90 backdrop-blur-md transition-colors duration-500">
-        <div className="px-6 py-4 flex items-center justify-between">
-          <button
-            onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2 focus:outline-none cursor-pointer text-left"
-          >
-            <span className="font-serif font-black text-xl tracking-tighter text-editorial-charcoal dark:text-editorial-cream">
-              JM
-            </span>
-            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 font-bold">
-              CORE.04
-            </span>
-          </button>
-
-          {/* Mobile Palette Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="min-touch rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100/[0.05] dark:bg-neutral-900/[0.05] text-editorial-charcoal dark:text-editorial-cream transition-all duration-300 cursor-pointer focus:outline-none"
-            aria-label="Toggle theme"
-          >
-            <div className="w-3.5 h-3.5 flex items-center justify-center">
-              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
-            </div>
-          </button>
-        </div>
-      </header>
-
-      {/* 3. MOBILE DOCK NAV (Floating bottom dock, hidden on desktop) */}
-      {/* FIX: use w-full + justify-around + flex-1 buttons so items never overflow screen edges */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center px-3 pb-[max(0.5rem,env(safe-area-inset-bottom,0.5rem))] pt-3 pointer-events-none">
-        <nav className="flex items-center justify-around w-full max-w-sm px-2 py-2.5 rounded-full bg-editorial-cream/90 dark:bg-editorial-charcoal/90 border border-neutral-200/80 dark:border-neutral-800/80 shadow-lg backdrop-blur-md pointer-events-auto transition-colors duration-500 overflow-hidden">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`flex-1 min-w-0 px-1.5 py-2 rounded-full font-sans text-[9px] font-bold uppercase tracking-wider transition-all duration-300 focus:outline-none cursor-pointer text-center ${
-                  isActive
-                    ? 'bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-editorial-charcoal dark:hover:text-editorial-cream'
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
       </div>
 
-      {/* 4. FLOATING ACTION BUTTONS */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              id="mobile-menu"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="md:hidden px-6 sm:px-10 pb-6 border-t border-neutral-300 bg-editorial-cream max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
+            >
+              <nav aria-label="Mobile">
+                <ul>
+                  {NAV_LINKS.map((link) => {
+                    const active = activeSection === link.id;
+                    return (
+                      <li key={link.id} className="border-b border-neutral-300">
+                        <button
+                          onClick={() => go(link.id)}
+                          aria-current={active ? 'location' : undefined}
+                          className={`w-full min-h-[56px] flex items-center justify-between text-left font-serif text-2xl cursor-pointer ${
+                            active ? 'text-editorial-charcoal font-semibold' : 'text-neutral-700'
+                          }`}
+                        >
+                          {link.label}
+                          {active && <span className="w-1.5 h-1.5 rounded-full bg-editorial-accent" aria-hidden="true" />}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  onOpenResume();
+                }}
+                className="mt-6 w-full min-h-[48px] inline-flex items-center justify-center gap-2 bg-editorial-charcoal text-editorial-cream font-mono text-xs font-bold uppercase tracking-wider cursor-pointer"
+              >
+                <FileText size={14} aria-hidden="true" />
+                Resume
+              </button>
+
+              <ul className="mt-4 flex items-center gap-2">
+                {SOCIALS.map(({ label, href, icon: Icon, external }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      aria-label={label}
+                      className="w-11 h-11 flex items-center justify-center border border-neutral-400 text-editorial-charcoal hover:bg-neutral-100"
+                    >
+                      <Icon size={16} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
       <AnimatePresence>
         {showBackToTop && (
-          <>
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="min-touch fixed bottom-24 lg:bottom-10 right-6 lg:right-10 z-50 rounded-full bg-editorial-charcoal text-editorial-cream dark:bg-editorial-cream dark:text-editorial-charcoal shadow-xl hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-all duration-300 cursor-pointer focus:outline-none"
-              aria-label="Back to Top"
-            >
-              <ArrowUp size={16} />
-            </motion.button>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              onClick={() => {
-                const el = document.getElementById('contact');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="min-touch-wide px-4 py-2.5 fixed bottom-36 lg:bottom-24 right-6 lg:right-10 z-50 rounded-full bg-gradient-to-r from-blue-600 to-violet-600 text-white shadow-xl hover:from-blue-500 hover:to-violet-500 transition-all duration-300 cursor-pointer focus:outline-none font-mono text-[10px] font-bold uppercase tracking-widest"
-              aria-label="Start a Project"
-            >
-              <span className="flex items-center gap-1.5"><Mail size={12} /> Start a Project</span>
-            </motion.button>
-          </>
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-[max(1.5rem,env(safe-area-inset-right))] lg:bottom-10 lg:right-10 z-40 w-11 h-11 flex items-center justify-center rounded-full bg-editorial-charcoal text-editorial-cream shadow-lg hover:bg-neutral-800 cursor-pointer"
+            aria-label="Back to top"
+          >
+            <ArrowUp size={16} />
+          </motion.button>
         )}
       </AnimatePresence>
     </>

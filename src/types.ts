@@ -43,10 +43,9 @@ export interface Experience {
 
 export interface Service {
   id: string;
-  number: string;
   title: string;
-  positioning: string;
   description: string;
-  includes: string[];
-  tools: string[];
+  actionLabel: string;
+  scrollTo?: string; // section id to scroll to
+  filter?: string; // Projects category to show
 }

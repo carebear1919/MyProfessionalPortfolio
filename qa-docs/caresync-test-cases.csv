@@ -1,0 +1,9 @@
+TC-ID,Module,Test Case,Type,Priority,Precondition,Test Steps,Test Data,Expected Result,Actual Result,Status,Bug ID,Tester,Date,Environment
+CS-01,Auth,Sign in as Elder routes to Elder home,Functional,P1,Elder account exists,1. Open app 2. Sign in with Elder account,Elder account,Elder home screen shown,,Not Run,,,,Android device or emulator
+CS-02,Auth,Sign in as Caregiver routes to Caregiver home,Functional,P1,Caregiver account exists,1. Open app 2. Sign in with Caregiver account,Caregiver account,Caregiver home screen shown,,Not Run,,,,
+CS-03,Auth,Wrong password is rejected,Negative,P1,Any account exists,1. Enter wrong password 2. Tap Sign in,Wrong password,Error message shown; user stays on sign-in,,Not Run,,,,
+CS-04,Auth,Signed-out user cannot open a protected screen,Security,P1,User signed out,1. Sign out 2. Use back navigation,None,User is sent to sign-in; no data shown,,Not Run,,,,
+CS-05,RBAC,Elder cannot see Caregiver-only controls,Functional,P2,Logged in as Elder,1. Browse all Elder screens,Elder account,No Caregiver-only controls visible,,Not Run,,,,
+CS-06,Data,Caregiver sees only their linked Elder's data,Security,P1,Two Caregivers linked to different Elders,1. Sign in as Caregiver A 2. Open medications and logs,Two linked pairs,Only A's linked Elder data is shown,,Not Run,,,,
+CS-07,Data,Medication added by Caregiver appears for Elder in real time,Integration,P1,Caregiver and Elder signed in on two devices,1. Caregiver adds a medication 2. Watch Elder screen,New medication,Elder sees it without restarting the app (StreamBuilder updates),,Not Run,,,,
+CS-08,Alerts,Missed dose triggers an alert to the Caregiver,Functional,P2,Medication schedule set,1. Let a scheduled dose pass without marking taken 2. Check Caregiver device,Missed dose,Caregiver receives a missed-dose alert,,Not Run,,,,
