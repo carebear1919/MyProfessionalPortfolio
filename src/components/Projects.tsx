@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ExternalLink, Github, ArrowLeft, ArrowRight, X, ZoomIn, ZoomOut, Pause, Play } from 'lucide-react';
 import { Project } from '../types';
 import { projects } from '../data';
+import { retryImageOnce } from './retryImage';
 
 const CATEGORIES = ['All', 'Web Development', 'UI/UX', 'Branding & Visuals'] as const;
 const INITIAL_VISIBLE = 6;
@@ -68,7 +69,10 @@ function Gallery({ project, onOpen }: { project: Project; onOpen: (images: strin
           style={{ height: '100%', maxWidth: 'none' }}
           className="absolute inset-0 w-full h-full object-contain"
           referrerPolicy="no-referrer"
-          onError={() => setFailed(true)}
+          onError={(e) => {
+            if (e.currentTarget.dataset.retried) setFailed(true);
+            retryImageOnce(e);
+          }}
         />
       </AnimatePresence>
       {failed && (
@@ -349,6 +353,7 @@ export default function Projects() {
                         alt=""
                         loading="lazy"
                         referrerPolicy="no-referrer"
+                        onError={retryImageOnce}
                         style={{ height: '100%', maxWidth: 'none' }}
                         className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
                       />

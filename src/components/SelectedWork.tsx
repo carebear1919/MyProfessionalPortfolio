@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { projects } from '../data';
+import { retryImageOnce } from './retryImage';
 
 interface SelectedWorkProps {
   scrollToSection: (id: string) => void;
@@ -50,6 +51,7 @@ export default function SelectedWork({ scrollToSection }: SelectedWorkProps) {
                 alt={project.title}
                 loading="lazy"
                 referrerPolicy="no-referrer"
+                onError={retryImageOnce}
                 style={{ height: '100%', maxWidth: 'none' }}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
               />
