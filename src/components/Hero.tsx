@@ -87,27 +87,23 @@ export default function Hero({ scrollToSection, onOpenResume }: HeroProps) {
 
       {/* Portrait column */}
       <div className="md:col-span-5 lg:col-span-7 relative min-h-[300px] md:min-h-0 order-2 bg-editorial-panel overflow-hidden md:border-l border-neutral-300 ">
-        {/* Soft sunlit glow behind the subject */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_45%,rgba(168,135,106,0.45),transparent_62%)] pointer-events-none" />
-        <span className="absolute left-[8%] top-[10%] bottom-0 w-px bg-editorial-accent/25 pointer-events-none" />
-
         <motion.img
           initial={{ opacity: 0, scale: 1.03 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          src="/Profile.webp"
-          alt="Jian Marie Hilario"
-          width={1200}
-          height={1800}
+          src="/Profile-graduation.webp"
+          alt="Jian Marie Hilario in graduation gown"
+          width={853}
+          height={1280}
           fetchPriority="high"
           loading="eager"
           decoding="async"
           style={{ height: '100%', maxWidth: 'none' }}
-          className="absolute inset-0 w-full h-full object-contain object-bottom lg:object-[70%_100%] drop-shadow-[0_20px_40px_rgba(22,20,17,0.25)]"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_18%]"
         />
 
-        <span className="absolute top-5 right-6 font-mono text-xs font-bold uppercase tracking-[0.25em] text-neutral-600 flex items-center gap-3 select-none">
-          Based in Cavite, PH <span className="w-8 h-px bg-neutral-500/70 inline-block" />
+        <span className="absolute top-5 right-6 font-mono text-xs font-bold uppercase tracking-[0.25em] text-editorial-cream flex items-center gap-3 select-none">
+          Based in Cavite, PH <span className="w-8 h-px bg-editorial-cream/70 inline-block" />
         </span>
       </div>
     </section>
